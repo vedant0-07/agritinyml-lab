@@ -5,8 +5,4 @@ numpy>=1.24.0
 pandas>=2.0.0
 scikit-learn>=1.9.0
 joblib>=1.3.0
-
-# TFLite runtime — for Python 3.11 (recommended for deployment):
-tensorflow-cpu>=2.13.0
-# For Python 3.13 (local dev only):
-# ai-edge-litert>=2.2.0
+ai-edge-litert>=2.2.0
