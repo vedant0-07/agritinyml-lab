@@ -46,6 +46,9 @@
     </button>
   </header>
 
+  <!-- Mobile nav overlay (tap to close drawer) -->
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
   <!-- ============ SIDEBAR NAV ============ -->
   <nav class="app-nav" id="app-nav" role="navigation" aria-label="Main navigation">
 
@@ -1019,6 +1022,32 @@
   </footer>
 
 </div><!-- end app-shell -->
+
+<!-- ============ MOBILE BOTTOM NAV ============ -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile quick navigation">
+  <div class="mobile-nav-items">
+    <button class="mobile-nav-btn active" data-page="dashboard" id="mob-nav-dashboard" aria-label="Dashboard">
+      <span class="mn-icon" aria-hidden="true">⊞</span>
+      <span>Home</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="playground" id="mob-nav-playground" aria-label="Playground">
+      <span class="mn-icon" aria-hidden="true">▷</span>
+      <span>Predict</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="evaluation" id="mob-nav-evaluation" aria-label="Evaluation">
+      <span class="mn-icon" aria-hidden="true">◎</span>
+      <span>Eval</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="architecture" id="mob-nav-architecture" aria-label="Architecture">
+      <span class="mn-icon" aria-hidden="true">⬡</span>
+      <span>System</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="team" id="mob-nav-team" aria-label="Team">
+      <span class="mn-icon" aria-hidden="true">◎</span>
+      <span>Team</span>
+    </button>
+  </div>
+</nav>
 
 <script src="/static/js/main.js"></script>
 <script src="/static/js/dashboard.js"></script>
