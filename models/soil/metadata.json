@@ -1,0 +1,17 @@
+{
+  "id": "soil",
+  "name": "Soil Monitoring",
+  "version": "0.0.0",
+  "description": "Monitors and classifies soil health conditions using sensor readings.",
+  "status": "coming_soon",
+  "model_type": "TBD",
+  "architecture": "TBD",
+  "total_parameters": null,
+  "input_features": [],
+  "output_classes": {},
+  "performance": {},
+  "quantization": {},
+  "fpga_status": "pending",
+  "completed_stages": [],
+  "pending_stages": ["Dataset Collection", "Preprocessing", "Model Training", "Evaluation", "TFLite Conversion", "INT8 Quantization", "FPGA Deployment"]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "disease",
+  "name": "Crop Disease Detection",
+  "version": "0.0.0",
+  "description": "Detects crop diseases from sensor readings or image-based features.",
+  "status": "coming_soon",
+  "model_type": "TBD",
+  "architecture": "TBD",
+  "total_parameters": null,
+  "input_features": [],
+  "output_classes": {},
+  "performance": {},
+  "quantization": {},
+  "fpga_status": "pending",
+  "completed_stages": [],
+  "pending_stages": ["Dataset Collection", "Preprocessing", "Model Training", "Evaluation", "TFLite Conversion", "INT8 Quantization", "FPGA Deployment"]
+}

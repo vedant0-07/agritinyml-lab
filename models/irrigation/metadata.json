@@ -1,0 +1,78 @@
+{
+  "id": "irrigation",
+  "name": "Irrigation Prediction",
+  "version": "1.0.0",
+  "description": "Binary classification TinyML model that predicts whether irrigation is required based on crop type, crop age, soil moisture, temperature and humidity.",
+  "status": "ready",
+  "model_type": "MLP / Feed Forward Neural Network",
+  "architecture": "13 -> 32 -> 16 -> 8 -> 1",
+  "total_parameters": 1121,
+  "input_features": [
+    "CropType",
+    "CropDays",
+    "SoilMoisture",
+    "temperature",
+    "Humidity"
+  ],
+  "processed_features": 13,
+  "output_classes": {
+    "0": "No Irrigation Required",
+    "1": "Irrigation Required"
+  },
+  "crop_types": [
+    "Wheat", "Groundnuts", "Garden Flowers", "Maize",
+    "Paddy", "Potato", "Pulse", "Sugarcane", "Coffee"
+  ],
+  "dataset": {
+    "total_samples": 501,
+    "train_samples": 350,
+    "val_samples": 75,
+    "test_samples": 76
+  },
+  "performance": {
+    "accuracy": 96.05,
+    "precision": 96.55,
+    "recall": 93.33,
+    "f1_score": 94.92
+  },
+  "confusion_matrix": {
+    "TP": 28, "TN": 45, "FP": 1, "FN": 2
+  },
+  "models": {
+    "int8": "models/irrigation_model_int8.tflite",
+    "float32": "models/irrigation_model_float32.tflite",
+    "keras": "models/irrigation_model.keras"
+  },
+  "preprocessor": "preprocessing/preprocessor.pkl",
+  "quantization": {
+    "float32": {
+      "size_kb": 6.90,
+      "accuracy": 96.05,
+      "precision": 96.55,
+      "recall": 93.33,
+      "f1_score": 94.92
+    },
+    "int8": {
+      "size_kb": 5.50,
+      "accuracy": 96.05,
+      "precision": 96.55,
+      "recall": 93.33,
+      "f1_score": 94.92
+    }
+  },
+  "fpga_status": "pending",
+  "completed_stages": [
+    "Dataset Preparation",
+    "Data Preprocessing",
+    "Model Training",
+    "Model Evaluation",
+    "Float32 TFLite Conversion",
+    "INT8 Quantization",
+    "Software Testing"
+  ],
+  "pending_stages": [
+    "FPGA Accelerator Design",
+    "FPGA Deployment",
+    "Hardware Benchmarking"
+  ]
+}

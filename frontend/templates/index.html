@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEAM TRONICS | AgriTinyML Lab — TinyML Edge Accelerator for Agriculture</title>
+  <meta name="description" content="Research platform for Design Adaptive Reconfigurable TinyML Edge Accelerator Using FPGA for Agriculture Applications. Group B2 — TEAM TRONICS." />
+  <meta name="keywords" content="TinyML, FPGA, Agriculture, Edge AI, INT8 Quantization, Irrigation Prediction, Embedded AI" />
+  <link rel="stylesheet" href="/static/css/main.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Favicon emoji fallback -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ HEADER ============ -->
+  <header class="app-header" role="banner">
+    <div class="header-brand">
+      <div class="brand-logo" aria-hidden="true">🌾</div>
+      <div class="brand-text">
+        <span class="brand-title">TEAM TRONICS</span>
+        <span class="brand-subtitle">AgriTinyML Lab</span>
+      </div>
+    </div>
+
+    <div class="header-status" aria-label="System Status">
+      <div class="status-pill online" id="system-status-pill" title="Software inference is active">
+        <div class="status-dot" aria-hidden="true"></div>
+        SYSTEM ONLINE
+      </div>
+      <div class="status-group">
+        <span class="status-label">Software Inference:</span>
+        <span class="status-value connected" id="inference-status-val">ACTIVE</span>
+      </div>
+      <div class="status-group">
+        <span class="status-label">FPGA:</span>
+        <span class="status-value disconnected" id="fpga-status-val">NOT CONNECTED</span>
+      </div>
+    </div>
+
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      ☰
+    </button>
+  </header>
+
+  <!-- ============ SIDEBAR NAV ============ -->
+  <nav class="app-nav" id="app-nav" role="navigation" aria-label="Main navigation">
+
+    <span class="nav-section-label">OVERVIEW</span>
+    <button class="nav-item active" data-page="dashboard" id="nav-dashboard" aria-current="page">
+      <span class="nav-icon" aria-hidden="true">⊞</span>
+      Dashboard
+    </button>
+
+    <span class="nav-section-label">MODELS</span>
+    <button class="nav-item" data-page="models" id="nav-models">
+      <span class="nav-icon" aria-hidden="true">◈</span>
+      Models
+      <span class="nav-badge">1 READY</span>
+    </button>
+    <button class="nav-item" data-page="playground" id="nav-playground">
+      <span class="nav-icon" aria-hidden="true">▷</span>
+      Playground
+    </button>
+
+    <span class="nav-section-label">ANALYSIS</span>
+    <button class="nav-item" data-page="evaluation" id="nav-evaluation">
+      <span class="nav-icon" aria-hidden="true">◎</span>
+      Evaluation
+    </button>
+    <button class="nav-item" data-page="comparison" id="nav-comparison">
+      <span class="nav-icon" aria-hidden="true">⇌</span>
+      Comparison
+    </button>
+    <button class="nav-item" data-page="experiments" id="nav-experiments">
+      <span class="nav-icon" aria-hidden="true">≡</span>
+      Experiments
+    </button>
+
+    <span class="nav-section-label">SYSTEM</span>
+    <button class="nav-item" data-page="architecture" id="nav-architecture">
+      <span class="nav-icon" aria-hidden="true">⬡</span>
+      Architecture
+    </button>
+
+    <span class="nav-section-label">PROJECT</span>
+    <button class="nav-item" data-page="project" id="nav-project">
+      <span class="nav-icon" aria-hidden="true">◉</span>
+      Project
+    </button>
+    <button class="nav-item" data-page="team" id="nav-team">
+      <span class="nav-icon" aria-hidden="true">◎</span>
+      Team
+    </button>
+  </nav>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="app-main" id="app-main" role="main">
+
+    <!-- ======== DASHBOARD ======== -->
+    <section class="page-section active" id="page-dashboard" aria-label="Dashboard">
+
+      <!-- Hero -->
+      <div class="hero-section grid-bg">
+        <div class="hero-tag">🛰 Research Platform &nbsp;·&nbsp; Group B2</div>
+        <h1 class="hero-title">Design Adaptive Reconfigurable TinyML Edge Accelerator Using FPGA for Agriculture Applications</h1>
+        <p class="hero-subtitle">An edge AI research platform for low-latency and resource-efficient agricultural intelligence.</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Group</span>
+            <span class="hero-meta-value">B2</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Team</span>
+            <span class="hero-meta-value">TEAM TRONICS</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Platform</span>
+            <span class="hero-meta-value">AgriTinyML Lab</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Stage</span>
+            <span class="hero-meta-value">Software Testing</span>
+          </div>
+        </div>
+        <p class="hero-subtitle mt-16" style="font-size:12px; color: var(--text-muted);">
+          Development platform for training, optimizing, testing and eventually deploying TinyML models for agriculture applications on FPGA-based edge hardware.
+        </p>
+      </div>
+
+      <!-- Key Stats -->
+      <div class="section-label">KEY STATISTICS</div>
+      <div class="grid-4 mb-24">
+        <div class="stat-card">
+          <div class="stat-icon cyan">◈</div>
+          <div class="stat-label">Active Models</div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub">Irrigation Prediction</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">⊕</div>
+          <div class="stat-label">Agricultural Apps</div>
+          <div class="stat-value">4</div>
+          <div class="stat-sub">Planned roadmap</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon cyan">◎</div>
+          <div class="stat-label">Test Accuracy</div>
+          <div class="stat-value">96.05<span style="font-size:14px">%</span></div>
+          <div class="stat-sub">INT8 model</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">⬡</div>
+          <div class="stat-label">INT8 Model Size</div>
+          <div class="stat-value">5.50<span style="font-size:14px"> KB</span></div>
+          <div class="stat-sub">Quantized TFLite</div>
+        </div>
+      </div>
+      <div class="grid-2 mb-24">
+        <div class="stat-card">
+          <div class="stat-icon amber">◐</div>
+          <div class="stat-label">FPGA Status</div>
+          <div class="stat-value" style="font-size:14px; color: var(--accent-amber);">NOT CONNECTED</div>
+          <div class="stat-sub">Planned future work</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon cyan">▷</div>
+          <div class="stat-label">Inference Engine</div>
+          <div class="stat-value" style="font-size:14px;">TFLite</div>
+          <div class="stat-sub">Software / CPU</div>
+        </div>
+      </div>
+
+      <!-- Featured Model -->
+      <div class="section-label">CURRENT MODEL</div>
+      <div class="featured-model-card mb-24">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+              <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">MODEL_01</span>
+              <span class="badge badge-green">● READY FOR TESTING</span>
+            </div>
+            <h2 style="font-size:20px; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em; margin-bottom:8px;">IRRIGATION PREDICTION</h2>
+            <p style="font-size:13px; color:var(--text-secondary); max-width:580px; line-height:1.7;">
+              Binary classification TinyML model that predicts whether irrigation is required based on crop type, crop age, soil moisture, temperature and humidity.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+              <span class="badge badge-cyan">INT8 Quantized</span>
+              <span class="badge badge-cyan">5.50 KB</span>
+              <span class="badge badge-cyan">1,121 Parameters</span>
+              <span class="badge badge-cyan">96.05% Accuracy</span>
+              <span class="badge badge-amber">FPGA: PENDING</span>
+            </div>
+          </div>
+          <button class="btn btn-green btn-lg" onclick="App.navigate('playground')" id="open-playground-btn" aria-label="Open model playground">
+            ▷ OPEN MODEL PLAYGROUND
+          </button>
+        </div>
+      </div>
+
+      <!-- Project Status -->
+      <div class="section-label">PROJECT STATUS</div>
+      <div class="grid-2 mb-24">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">Dataset Preparation</div><div class="progress-state done">COMPLETED</div></div>
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">Data Preprocessing</div><div class="progress-state done">COMPLETED</div></div>
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">Irrigation Model Training</div><div class="progress-state done">COMPLETED</div></div>
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">Model Evaluation</div><div class="progress-state done">COMPLETED</div></div>
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">TFLite Conversion</div><div class="progress-state done">COMPLETED</div></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">INT8 Quantization</div><div class="progress-state done">COMPLETED</div></div>
+          <div class="progress-item"><div class="progress-status done">✓</div><div class="progress-name">Software Model Testing</div><div class="progress-state done">COMPLETED</div></div>
+          <div class="progress-item"><div class="progress-status pending">○</div><div class="progress-name">FPGA Accelerator Design</div><div class="progress-state pending">PENDING</div></div>
+          <div class="progress-item"><div class="progress-status pending">○</div><div class="progress-name">FPGA Deployment</div><div class="progress-state pending">PENDING</div></div>
+          <div class="progress-item"><div class="progress-status pending">○</div><div class="progress-name">Hardware Benchmarking</div><div class="progress-state pending">PENDING</div></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======== MODELS ======== -->
+    <section class="page-section" id="page-models" aria-label="Agricultural Models">
+      <div class="page-header">
+        <div>
+          <div class="section-label">MODEL REGISTRY</div>
+          <h1 class="page-title">Agricultural AI Models</h1>
+          <p class="page-subtitle">Modular model registry for edge-deployed TinyML applications.</p>
+        </div>
+      </div>
+
+      <div class="grid-2 mb-24">
+        <div class="app-card active-model">
+          <div class="app-card-num">MODEL 01</div>
+          <div class="app-card-title">Irrigation Prediction</div>
+          <div class="app-card-desc">Binary classification TinyML model predicting irrigation need from crop type, age, soil moisture, temperature and humidity. INT8 quantized, 5.50 KB.</div>
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <span class="badge badge-green">● READY</span>
+            <button class="btn btn-primary btn-sm" onclick="App.navigate('playground')" aria-label="Open playground for irrigation model">OPEN PLAYGROUND</button>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-card-num">MODEL 02</div>
+          <div class="app-card-title">Crop Disease Detection</div>
+          <div class="app-card-desc">Detect crop diseases from sensor readings or image features to enable early intervention and reduce crop loss.</div>
+          <span class="badge badge-amber">◷ COMING SOON</span>
+        </div>
+        <div class="app-card">
+          <div class="app-card-num">MODEL 03</div>
+          <div class="app-card-title">Pest Identification</div>
+          <div class="app-card-desc">Identify agricultural pests from field data or image-derived features, enabling precise and timely pest management.</div>
+          <span class="badge badge-amber">◷ COMING SOON</span>
+        </div>
+        <div class="app-card">
+          <div class="app-card-num">MODEL 04</div>
+          <div class="app-card-title">Soil Monitoring</div>
+          <div class="app-card-desc">Classify and monitor soil health conditions using multi-sensor readings to guide precision agriculture decisions.</div>
+          <span class="badge badge-amber">◷ COMING SOON</span>
+        </div>
+      </div>
+
+      <!-- Model Registry Structure -->
+      <div class="section-label">MODEL REGISTRY STRUCTURE</div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Directory Layout</span><span class="badge badge-cyan">Modular</span></div>
+        <div class="code-block">models/
+├── irrigation/
+│   ├── model_int8.tflite     ← Active INT8 model
+│   ├── model_float32.tflite  ← Float32 reference
+│   └── metadata.json         ← Model registry entry
+├── disease/
+│   └── metadata.json         ← Placeholder
+├── pest/
+│   └── metadata.json         ← Placeholder
+└── soil/
+    └── metadata.json         ← Placeholder</div>
+        <p class="card-meta mt-12">Future trained models can be added by placing the .tflite file and updating metadata.json — no frontend redesign required.</p>
+      </div>
+    </section>
+
+    <!-- ======== PLAYGROUND ======== -->
+    <section class="page-section" id="page-playground" aria-label="Model Playground">
+      <div class="page-header">
+        <div>
+          <div class="section-label">IRRIGATION MODEL · INT8 INFERENCE</div>
+          <h1 class="page-title">Irrigation Model Playground</h1>
+          <p class="page-subtitle">Enter agricultural conditions and run real-time TinyML inference on the INT8 quantized model.</p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <span class="badge badge-green">● Software Inference Active</span>
+          <span class="badge badge-amber">FPGA: Not Connected</span>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:24px; align-items:start;">
+        <!-- Input Form -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Input Parameters</span>
+            <span class="badge badge-cyan">5 Features → 13 Processed</span>
+          </div>
+
+          <!-- Pipeline visual -->
+          <div class="info-box info mb-16">
+            <span class="info-icon">ℹ</span>
+            <span>Raw inputs are preprocessed using the same ColumnTransformer pipeline from training (preprocessor.pkl). <strong>No refitting occurs.</strong></span>
+          </div>
+
+          <form id="playground-form" novalidate>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="input-crop-type">Crop Type</label>
+                <select class="form-select" id="input-crop-type" required aria-required="true">
+                  <option value="">Select crop type…</option>
+                  <option value="Coffee">Coffee</option>
+                  <option value="Garden Flowers">Garden Flowers</option>
+                  <option value="Groundnuts">Groundnuts</option>
+                  <option value="Maize">Maize</option>
+                  <option value="Paddy">Paddy</option>
+                  <option value="Potato">Potato</option>
+                  <option value="Pulse">Pulse</option>
+                  <option value="Sugarcane">Sugarcane</option>
+                  <option value="Wheat">Wheat</option>
+                </select>
+                <span class="form-error" id="err-crop-type">Please select a crop type.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-crop-days">Crop Age (Days)</label>
+                <input class="form-input" type="number" id="input-crop-days" min="0" step="1" placeholder="e.g. 45" required aria-required="true" />
+                <span class="form-hint">Number of days since crop was planted.</span>
+                <span class="form-error" id="err-crop-days">Please enter a valid crop age.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-soil-moisture">Soil Moisture</label>
+                <input class="form-input" type="number" id="input-soil-moisture" step="any" placeholder="e.g. 200" required aria-required="true" />
+                <span class="form-hint">Soil moisture sensor reading.</span>
+                <span class="form-error" id="err-soil-moisture">Please enter a valid soil moisture value.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-temperature">Temperature (°C)</label>
+                <input class="form-input" type="number" id="input-temperature" step="any" placeholder="e.g. 35" required aria-required="true" />
+                <span class="form-error" id="err-temperature">Please enter a valid temperature.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-humidity">Humidity (%)</label>
+                <input class="form-input" type="number" id="input-humidity" min="0" max="100" step="any" placeholder="e.g. 25" required aria-required="true" />
+                <span class="form-error" id="err-humidity">Please enter a valid humidity (0–100%).</span>
+              </div>
+
+              <div id="playground-error" class="info-box error" style="display:none;">
+                <span class="info-icon">✕</span>
+                <span id="playground-error-text"></span>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg w-full" id="run-predict-btn" aria-label="Run INT8 prediction">
+                <span id="run-predict-spinner" class="spinner" style="display:none;"></span>
+                ▷ RUN INT8 PREDICTION
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Result Panel -->
+        <div>
+          <div class="result-card empty" id="result-card" aria-live="polite" aria-atomic="true">
+            <div id="result-empty" style="color:var(--text-muted); font-size:13px;">
+              <div style="font-size:40px; margin-bottom:12px;">◎</div>
+              <div style="font-weight:600; margin-bottom:6px;">AWAITING INPUT</div>
+              <div style="font-size:12px;">Enter agricultural parameters and click RUN INT8 PREDICTION to see real model inference results.</div>
+            </div>
+
+            <div id="result-content" style="display:none;">
+              <div class="result-icon" id="result-icon">🌱</div>
+              <div class="result-label" id="result-label">—</div>
+              <div class="result-prob" id="result-prob">—</div>
+              <div class="result-meta-grid">
+                <div class="result-meta-item"><div class="result-meta-key">Prediction</div><div class="result-meta-val" id="rm-prediction">—</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">Probability</div><div class="result-meta-val" id="rm-probability">—</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">Model</div><div class="result-meta-val" id="rm-model">—</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">Inference Engine</div><div class="result-meta-val" id="rm-engine">—</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">Execution</div><div class="result-meta-val" id="rm-execution">—</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">Inference Time</div><div class="result-meta-val" id="rm-time">—</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">FPGA Status</div><div class="result-meta-val" style="color:var(--accent-amber);" id="rm-fpga">Not Connected</div></div>
+                <div class="result-meta-item"><div class="result-meta-key">Backend</div><div class="result-meta-val" id="rm-backend">—</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Probability Bar -->
+          <div class="card mt-16" id="prob-bar-card" style="display:none;">
+            <div class="card-title mb-12">PROBABILITY BREAKDOWN</div>
+            <div class="metric-bar-row">
+              <div class="metric-bar-label">Irrigation</div>
+              <div class="metric-bar-track"><div class="metric-bar-fill" id="prob-bar-irrigation" style="width:0%; background: linear-gradient(90deg, #22c55e, #16a34a);"></div></div>
+              <div class="metric-bar-value" id="prob-val-irrigation">0%</div>
+            </div>
+            <div class="metric-bar-row">
+              <div class="metric-bar-label">No Irrigation</div>
+              <div class="metric-bar-track"><div class="metric-bar-fill" id="prob-bar-no-irrigation" style="width:0%; background: linear-gradient(90deg, #0ea5e9, #0284c7);"></div></div>
+              <div class="metric-bar-value" id="prob-val-no-irrigation">0%</div>
+            </div>
+          </div>
+
+          <!-- Preprocessing Pipeline Visual -->
+          <div class="card mt-16">
+            <div class="card-title mb-16">PREPROCESSING PIPELINE</div>
+            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-secondary); display:flex; flex-direction:column; gap:3px;">
+              <div style="color:var(--accent-green); font-weight:600;">Raw Input (5 fields)</div>
+              <div style="color:var(--text-muted);">    ↓</div>
+              <div>CropType → OneHotEncoder (9 classes)</div>
+              <div style="color:var(--text-muted);">    ↓</div>
+              <div>Numerical Features → StandardScaler</div>
+              <div style="color:var(--text-muted);">    ↓</div>
+              <div style="color:var(--accent-cyan); font-weight:600;">13 Processed Features</div>
+              <div style="color:var(--text-muted);">    ↓</div>
+              <div>INT8 Quantization Layer</div>
+              <div style="color:var(--text-muted);">    ↓</div>
+              <div style="color:var(--accent-amber); font-weight:600;">INT8 TFLite Model</div>
+              <div style="color:var(--text-muted);">    ↓</div>
+              <div style="color:var(--accent-green); font-weight:600;">Irrigation Decision</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== EVALUATION ======== -->
+    <section class="page-section" id="page-evaluation" aria-label="Model Evaluation">
+      <div class="page-header">
+        <div>
+          <div class="section-label">IRRIGATION MODEL · INT8</div>
+          <h1 class="page-title">Model Evaluation</h1>
+          <p class="page-subtitle">Run the complete 76-sample test set through the actual INT8 model.</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <button class="btn btn-primary" id="run-eval-btn" aria-label="Run complete test set evaluation">
+            <span id="eval-spinner" class="spinner" style="display:none;"></span>
+            ◎ RUN COMPLETE TEST SET
+          </button>
+          <button class="btn btn-outline btn-sm" id="export-eval-btn" style="display:none;" aria-label="Export evaluation results">⬇ EXPORT RESULTS</button>
+        </div>
+      </div>
+
+      <!-- Summary Cards (shown after run) -->
+      <div id="eval-summary" class="grid-4 mb-24" style="display:none;">
+        <div class="stat-card"><div class="stat-label">Test Samples</div><div class="stat-value" id="ev-samples">76</div></div>
+        <div class="stat-card"><div class="stat-label">Accuracy</div><div class="stat-value" id="ev-accuracy" style="color:var(--accent-green);">—</div></div>
+        <div class="stat-card"><div class="stat-label">Correct</div><div class="stat-value" id="ev-correct" style="color:var(--accent-green);">—</div></div>
+        <div class="stat-card"><div class="stat-label">Incorrect</div><div class="stat-value" id="ev-incorrect" style="color:var(--accent-red);">—</div></div>
+      </div>
+
+      <!-- Default state - static metrics display -->
+      <div id="eval-static" class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Performance Metrics</span><span class="badge badge-cyan">INT8 Model</span></div>
+          <div style="margin-top:8px;">
+            <div class="metric-bar-row"><div class="metric-bar-label">Accuracy</div><div class="metric-bar-track"><div class="metric-bar-fill" style="width:96.05%"></div></div><div class="metric-bar-value">96.05%</div></div>
+            <div class="metric-bar-row"><div class="metric-bar-label">Precision</div><div class="metric-bar-track"><div class="metric-bar-fill" style="width:96.55%"></div></div><div class="metric-bar-value">96.55%</div></div>
+            <div class="metric-bar-row"><div class="metric-bar-label">Recall</div><div class="metric-bar-track"><div class="metric-bar-fill" style="width:93.33%"></div></div><div class="metric-bar-value">93.33%</div></div>
+            <div class="metric-bar-row"><div class="metric-bar-label">F1 Score</div><div class="metric-bar-track"><div class="metric-bar-fill" style="width:94.92%"></div></div><div class="metric-bar-value">94.92%</div></div>
+          </div>
+          <div class="info-box info mt-16" style="font-size:11px;">
+            <span class="info-icon">ℹ</span>
+            <span>Click <strong>RUN COMPLETE TEST SET</strong> above to run the actual 76-sample evaluation through the INT8 model.</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Confusion Matrix</span><span class="badge badge-green">76 Samples</span></div>
+          <div style="display:flex; flex-direction:column; align-items:center; padding:16px;">
+            <div style="display:grid; grid-template-columns: auto auto auto; gap:4px; align-items:center;">
+              <div></div>
+              <div style="text-align:center; font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">PRED: 0</div>
+              <div style="text-align:center; font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">PRED: 1</div>
+              <div style="font-size:10px; color:var(--text-muted); padding:4px 8px; writing-mode:inherit; letter-spacing:.08em;">ACT: 0</div>
+              <div class="cm-cell tn" id="cm-TN"><div>45</div><div class="cm-cell-label">TN</div></div>
+              <div class="cm-cell fp" id="cm-FP"><div>1</div><div class="cm-cell-label">FP</div></div>
+              <div style="font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">ACT: 1</div>
+              <div class="cm-cell fn" id="cm-FN"><div>2</div><div class="cm-cell-label">FN</div></div>
+              <div class="cm-cell tp" id="cm-TP"><div>28</div><div class="cm-cell-label">TP</div></div>
+            </div>
+            <div style="display:flex; gap:16px; margin-top:16px; font-size:10px; flex-wrap:wrap; justify-content:center;">
+              <span style="color:var(--accent-green);">■ Correct Predictions</span>
+              <span style="color:var(--accent-red);">■ Incorrect Predictions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Chart (shown after run) -->
+      <div id="eval-charts" style="display:none;" class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Live Confusion Matrix</span><span class="badge badge-green">Actual Run</span></div>
+          <div style="display:flex; justify-content:center; padding:16px;">
+            <div style="display:grid; grid-template-columns: auto auto auto; gap:4px; align-items:center;">
+              <div></div>
+              <div style="text-align:center; font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">PRED: 0</div>
+              <div style="text-align:center; font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">PRED: 1</div>
+              <div style="font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">ACT: 0</div>
+              <div class="cm-cell tn" id="live-cm-TN"><div>—</div><div class="cm-cell-label">TN</div></div>
+              <div class="cm-cell fp" id="live-cm-FP"><div>—</div><div class="cm-cell-label">FP</div></div>
+              <div style="font-size:10px; color:var(--text-muted); padding:4px 8px; letter-spacing:.08em;">ACT: 1</div>
+              <div class="cm-cell fn" id="live-cm-FN"><div>—</div><div class="cm-cell-label">FN</div></div>
+              <div class="cm-cell tp" id="live-cm-TP"><div>—</div><div class="cm-cell-label">TP</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Live Metrics</span><span class="badge badge-cyan">From Actual Run</span></div>
+          <div id="live-metrics" style="margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <!-- Sample Table (shown after run) -->
+      <div id="eval-samples-section" style="display:none;" class="card">
+        <div class="card-header">
+          <span class="card-title">Sample Results</span>
+          <div style="display:flex; gap:8px;">
+            <span class="badge badge-green" id="eval-correct-badge">—</span>
+            <span class="badge badge-red" id="eval-incorrect-badge">—</span>
+          </div>
+        </div>
+        <div style="overflow-x:auto; max-height:350px; overflow-y:auto;">
+          <table class="data-table" id="eval-samples-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>True</th>
+                <th>Predicted</th>
+                <th>Probability</th>
+                <th>Correct</th>
+              </tr>
+            </thead>
+            <tbody id="eval-samples-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======== COMPARISON ======== -->
+    <section class="page-section" id="page-comparison" aria-label="Model Comparison">
+      <div class="page-header">
+        <div>
+          <div class="section-label">OPTIMIZATION ANALYSIS</div>
+          <h1 class="page-title">Model Optimization</h1>
+          <p class="page-subtitle">Float32 vs INT8 quantization comparison and Software vs FPGA status.</p>
+        </div>
+      </div>
+
+      <!-- Quantization Explanation -->
+      <div class="info-box info mb-24">
+        <span class="info-icon">💡</span>
+        <span>INT8 quantization reduces numerical representation from 32-bit floating point to 8-bit integer representation, making the model more suitable for resource-constrained edge devices and hardware acceleration.</span>
+      </div>
+
+      <!-- Float32 vs INT8 Table -->
+      <div class="section-label">FLOAT32 vs INT8 QUANTIZATION</div>
+      <div class="card mb-24">
+        <div class="card-header"><span class="card-title">Quantization Comparison</span><span class="badge badge-cyan">Irrigation Model</span></div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th style="color:var(--accent-cyan);">Float32</th>
+                <th style="color:var(--accent-green);">INT8</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Accuracy</td><td class="highlight">96.05%</td><td class="highlight">96.05%</td><td style="color:var(--accent-green);">= Maintained</td></tr>
+              <tr><td>Precision</td><td class="highlight">96.55%</td><td class="highlight">96.55%</td><td style="color:var(--accent-green);">= Maintained</td></tr>
+              <tr><td>Recall</td><td class="highlight">93.33%</td><td class="highlight">93.33%</td><td style="color:var(--accent-green);">= Maintained</td></tr>
+              <tr><td>F1 Score</td><td class="highlight">94.92%</td><td class="highlight">94.92%</td><td style="color:var(--accent-green);">= Maintained</td></tr>
+              <tr><td>Model Size</td><td>6.90 KB</td><td style="color:var(--accent-green); font-weight:700;">5.50 KB</td><td style="color:var(--accent-green);">↓ 20.3% reduction</td></tr>
+              <tr><td>Numerical Type</td><td>32-bit float</td><td style="color:var(--accent-green);">8-bit integer</td><td style="color:var(--accent-green);">4× size reduction per value</td></tr>
+              <tr><td>FPGA Suitability</td><td class="tbd">Moderate</td><td style="color:var(--accent-green);">High (hardware-friendly)</td><td style="color:var(--accent-green);">Improved</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Size Chart -->
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Model Size Comparison</span></div>
+          <div style="max-height:250px; display:flex; align-items:center; justify-content:center;">
+            <canvas id="size-chart" aria-label="Model size bar chart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Accuracy Comparison</span></div>
+          <div style="max-height:250px; display:flex; align-items:center; justify-content:center;">
+            <canvas id="accuracy-chart" aria-label="Accuracy bar chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- FPGA Comparison -->
+      <div class="section-label">SOFTWARE vs FPGA</div>
+      <div class="fpga-banner">
+        <span style="font-size:18px;">⚠</span>
+        <span><strong>FPGA HARDWARE IMPLEMENTATION — FUTURE WORK</strong> · FPGA accelerator design and hardware benchmarking are planned for the next project phase. All FPGA metrics are TBD until actual hardware testing.</span>
+      </div>
+
+      <div class="card mb-24">
+        <div class="card-header">
+          <span class="card-title">Software / TFLite vs FPGA Accelerator</span>
+          <div style="display:flex; gap:8px;">
+            <span class="badge badge-green">Software: Available</span>
+            <span class="badge badge-amber">FPGA: Not Connected</span>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th style="color:var(--accent-cyan);">Software / TFLite</th>
+                <th style="color:var(--accent-amber);">FPGA Accelerator</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Accuracy</td><td class="highlight">96.05%</td><td class="tbd">TBD (Planned)</td></tr>
+              <tr><td>Inference Latency</td><td class="tbd">Measured per-run (see Playground)</td><td class="tbd">TBD (Planned)</td></tr>
+              <tr><td>Power Consumption</td><td class="tbd">TBD</td><td class="tbd">TBD (Planned)</td></tr>
+              <tr><td>Memory Usage</td><td class="tbd">TBD</td><td class="tbd">TBD (Planned)</td></tr>
+              <tr><td>FPGA Resource Utilization</td><td>N/A</td><td class="tbd">TBD (Planned)</td></tr>
+              <tr><td>Deployment Status</td><td class="highlight">Active</td><td style="color:var(--accent-amber);">Not Connected</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning mt-16" style="font-size:11px;">
+          <span class="info-icon">⚠</span>
+          <span>FPGA performance results will only be populated after actual hardware testing on the FPGA accelerator. No fabricated values are shown.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== EXPERIMENTS ======== -->
+    <section class="page-section" id="page-experiments" aria-label="Experiment History">
+      <div class="page-header">
+        <div>
+          <div class="section-label">INFERENCE LOG</div>
+          <h1 class="page-title">Experiment History</h1>
+          <p class="page-subtitle">All manual predictions are automatically logged here.</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" id="refresh-history-btn" aria-label="Refresh history">↻ REFRESH</button>
+          <button class="btn btn-outline btn-sm" id="export-history-btn" aria-label="Export CSV">⬇ EXPORT CSV</button>
+          <button class="btn btn-danger btn-sm" id="clear-history-btn" aria-label="Clear history">✕ CLEAR</button>
+        </div>
+      </div>
+
+      <div class="card mb-16" style="padding:14px 20px;">
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <input type="text" class="form-input" id="history-search" placeholder="Search by crop type, prediction…" style="max-width:280px;" aria-label="Search experiment history" />
+          <select class="form-select" id="history-filter-pred" style="max-width:200px;" aria-label="Filter by prediction">
+            <option value="">All Predictions</option>
+            <option value="0">No Irrigation Required</option>
+            <option value="1">Irrigation Required</option>
+          </select>
+          <span class="stat-label" id="history-count" style="font-family:var(--font-mono); font-size:11px;"></span>
+        </div>
+      </div>
+
+      <div class="card" style="overflow-x:auto;">
+        <div id="history-loading" class="loading-overlay"><div class="spinner"></div> Loading history…</div>
+        <div id="history-empty" class="loading-overlay" style="display:none; flex-direction:column; gap:8px;">
+          <span style="font-size:32px;">◎</span>
+          <span style="color:var(--text-muted);">No experiments yet. Run some predictions in the Playground.</span>
+          <button class="btn btn-primary btn-sm" onclick="App.navigate('playground')">Open Playground</button>
+        </div>
+        <table class="data-table" id="history-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Timestamp</th>
+              <th>Model</th>
+              <th>Crop Type</th>
+              <th>Crop Days</th>
+              <th>Soil Moisture</th>
+              <th>Temperature</th>
+              <th>Humidity</th>
+              <th>Prediction</th>
+              <th>Probability</th>
+              <th>Engine</th>
+              <th>Time (ms)</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ======== ARCHITECTURE ======== -->
+    <section class="page-section" id="page-architecture" aria-label="System Architecture">
+      <div class="page-header">
+        <div>
+          <div class="section-label">SYSTEM DESIGN</div>
+          <h1 class="page-title">Architecture</h1>
+          <p class="page-subtitle">System architecture and development pipeline for the AgriTinyML edge platform.</p>
+        </div>
+      </div>
+
+      <div class="grid-2 mb-24" style="gap:24px; align-items:start;">
+
+        <!-- System Architecture -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">System Architecture</span></div>
+          <div class="arch-diagram mt-8">
+            <div class="arch-node input">🌾 Agricultural Field</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node input">📡 Sensors</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Data Acquisition</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Preprocessing</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">TinyML Model (INT8)</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node pending">⚠ FPGA Edge Accelerator<br/><span class="arch-label">[ PLANNED IMPLEMENTATION ]</span></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node output">Prediction Output</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node decision">🌱 Agricultural Decision</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node decision">⚙ Control / Action</div>
+          </div>
+        </div>
+
+        <!-- Development Pipeline -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Development Pipeline</span></div>
+          <div class="arch-diagram mt-8">
+            <div class="arch-node input">Dataset</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Preprocessing ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Training ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Validation ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Testing ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">TFLite Conversion ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">INT8 Quantization ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">Software Testing ✓</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node pending">FPGA Implementation ○</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node pending">Hardware Deployment ○</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node pending">Benchmarking ○</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Architecture -->
+      <div class="section-label">NEURAL NETWORK ARCHITECTURE</div>
+      <div class="grid-2 mb-24" style="align-items:start;">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Irrigation MLP Architecture</span><span class="badge badge-cyan">MLP / Feed Forward</span></div>
+          <div class="arch-diagram mt-8">
+            <div class="arch-node input">INPUT LAYER<div class="arch-label">13 Features</div></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">DENSE 32<div class="arch-label">ReLU Activation</div></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">DENSE 16<div class="arch-label">ReLU Activation</div></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node hidden">DENSE 8<div class="arch-label">ReLU Activation</div></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node output">DENSE 1<div class="arch-label">Sigmoid Activation</div></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-node decision">🌱 IRRIGATION DECISION<div class="arch-label">0 = No Irrigation | 1 = Required</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Technical Specifications</span></div>
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="stat-card"><div class="stat-label">Architecture</div><div class="stat-value" style="font-size:14px;">13→32→16→8→1</div></div>
+              <div class="stat-card"><div class="stat-label">Parameters</div><div class="stat-value">1,121</div></div>
+              <div class="stat-card"><div class="stat-label">Model Type</div><div class="stat-value" style="font-size:13px;">MLP</div></div>
+              <div class="stat-card"><div class="stat-label">Quantization</div><div class="stat-value" style="font-size:14px;">INT8</div></div>
+              <div class="stat-card"><div class="stat-label">Float32 Size</div><div class="stat-value" style="font-size:16px;">6.90 KB</div></div>
+              <div class="stat-card"><div class="stat-label">INT8 Size</div><div class="stat-value" style="font-size:16px; color:var(--accent-green);">5.50 KB</div></div>
+            </div>
+          </div>
+
+          <!-- Inference Abstraction -->
+          <div class="section-label mt-24">INFERENCE ABSTRACTION LAYER</div>
+          <div class="code-block" style="font-size:11px;">InferenceManager
+    │
+    ├── TFLiteBackend  ← ACTIVE ✓
+    │   (irrigation_model_int8.tflite)
+    │
+    └── FPGABackend    ← NOT CONNECTED ○
+        (Future hardware implementation)</div>
+          <p class="card-meta mt-8">The abstraction layer means adding FPGA support requires no frontend changes.</p>
+        </div>
+      </div>
+
+      <!-- Dataset Details -->
+      <div class="section-label">DATASET & FEATURES</div>
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Dataset Split</span></div>
+          <div style="max-height:200px;"><canvas id="dataset-chart" aria-label="Dataset split pie chart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Input Features</span><span class="badge badge-cyan">5 Raw → 13 Processed</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg-base); border-radius:6px; font-size:12px;">
+              <span class="mono">CropType</span><span class="badge badge-cyan">One-Hot (9)</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg-base); border-radius:6px; font-size:12px;">
+              <span class="mono">CropDays</span><span class="badge badge-green">Scaled</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg-base); border-radius:6px; font-size:12px;">
+              <span class="mono">SoilMoisture</span><span class="badge badge-green">Scaled</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg-base); border-radius:6px; font-size:12px;">
+              <span class="mono">temperature</span><span class="badge badge-green">Scaled</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg-base); border-radius:6px; font-size:12px;">
+              <span class="mono">Humidity</span><span class="badge badge-green">Scaled</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; font-size:11px; color:var(--text-muted);">
+            Crop types: Wheat, Groundnuts, Garden Flowers, Maize, Paddy, Potato, Pulse, Sugarcane, Coffee
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== PROJECT ======== -->
+    <section class="page-section" id="page-project" aria-label="Project Information">
+      <div class="page-header">
+        <div>
+          <div class="section-label">GROUP B2 · TEAM TRONICS</div>
+          <h1 class="page-title">About the Project</h1>
+        </div>
+      </div>
+
+      <!-- Problem & Solution -->
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Problem Statement</span></div>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.8; margin-top:8px;">
+            Cloud-based agricultural AI systems introduce internet dependency, communication overhead, and latency. In remote or resource-constrained agricultural settings, reliable cloud connectivity cannot be assumed.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Proposed Solution</span></div>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.8; margin-top:8px;">
+            Utilize TinyML and FPGA-based edge acceleration to perform agricultural AI inference locally — on-device, in real-time, without cloud dependency. INT8 quantization reduces model size and improves hardware suitability.
+          </p>
+        </div>
+      </div>
+
+      <!-- Objectives -->
+      <div class="section-label">PROJECT OBJECTIVES</div>
+      <div class="card mb-24">
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:12px 16px; background:var(--bg-base); border-radius:8px;">
+            <span style="color:var(--accent-cyan); font-weight:700; font-family:var(--font-mono); flex-shrink:0;">01</span>
+            <span style="font-size:13px; color:var(--text-secondary);">Develop an FPGA-based TinyML edge accelerator for agricultural AI applications.</span>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:12px 16px; background:var(--bg-base); border-radius:8px;">
+            <span style="color:var(--accent-cyan); font-weight:700; font-family:var(--font-mono); flex-shrink:0;">02</span>
+            <span style="font-size:13px; color:var(--text-secondary);">Enable real-time local inference with reduced dependency on cloud connectivity.</span>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:12px 16px; background:var(--bg-base); border-radius:8px;">
+            <span style="color:var(--accent-cyan); font-weight:700; font-family:var(--font-mono); flex-shrink:0;">03</span>
+            <span style="font-size:13px; color:var(--text-secondary);">Support multiple agricultural AI workloads through an adaptive/reconfigurable architecture.</span>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:12px 16px; background:var(--bg-base); border-radius:8px;">
+            <span style="color:var(--accent-cyan); font-weight:700; font-family:var(--font-mono); flex-shrink:0;">04</span>
+            <span style="font-size:13px; color:var(--text-secondary);">Reduce computational and memory requirements through TinyML and INT8 quantization.</span>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:12px 16px; background:var(--bg-base); border-radius:8px;">
+            <span style="color:var(--accent-cyan); font-weight:700; font-family:var(--font-mono); flex-shrink:0;">05</span>
+            <span style="font-size:13px; color:var(--text-secondary);">Evaluate the performance of software inference and eventually FPGA-based acceleration.</span>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start; padding:12px 16px; background:var(--bg-base); border-radius:8px;">
+            <span style="color:var(--accent-cyan); font-weight:700; font-family:var(--font-mono); flex-shrink:0;">06</span>
+            <span style="font-size:13px; color:var(--text-secondary);">Develop a scalable platform for agriculture applications such as irrigation prediction, disease detection, pest identification and soil monitoring.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="section-label">PROJECT BENEFITS</div>
+      <div class="grid-3 mb-24">
+        <div class="stat-card"><div class="stat-icon cyan">⚡</div><div class="stat-label">Benefit</div><div style="font-size:14px; font-weight:700; color:var(--text-primary);">Low-Latency Edge Inference</div></div>
+        <div class="stat-card"><div class="stat-icon green">📶</div><div class="stat-label">Benefit</div><div style="font-size:14px; font-weight:700; color:var(--text-primary);">Offline AI Capability</div></div>
+        <div class="stat-card"><div class="stat-icon cyan">◈</div><div class="stat-label">Benefit</div><div style="font-size:14px; font-weight:700; color:var(--text-primary);">Resource-Efficient ML</div></div>
+        <div class="stat-card"><div class="stat-icon amber">⬡</div><div class="stat-label">Benefit</div><div style="font-size:14px; font-weight:700; color:var(--text-primary);">FPGA Hardware Acceleration</div></div>
+        <div class="stat-card"><div class="stat-icon green">⊕</div><div class="stat-label">Benefit</div><div style="font-size:14px; font-weight:700; color:var(--text-primary);">Scalable Agricultural AI</div></div>
+        <div class="stat-card"><div class="stat-icon cyan">☁</div><div class="stat-label">Benefit</div><div style="font-size:14px; font-weight:700; color:var(--text-primary);">Reduced Cloud Dependency</div></div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="section-label">PROJECT TIMELINE</div>
+      <div class="card mb-24">
+        <div class="timeline">
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Literature Review</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Dataset Collection</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Dataset Preprocessing</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Irrigation Model Training</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Model Evaluation</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Float32 TFLite Conversion</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">INT8 Quantization</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Software Testing</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot done">✓</div><div class="timeline-text">Web Demonstration Platform</div><div class="timeline-state done">COMPLETED</div></div>
+          <div class="timeline-item"><div class="timeline-dot pending">○</div><div class="timeline-text">FPGA Accelerator Design</div><div class="timeline-state pending">PENDING</div></div>
+          <div class="timeline-item"><div class="timeline-dot pending">○</div><div class="timeline-text">FPGA Deployment</div><div class="timeline-state pending">PENDING</div></div>
+          <div class="timeline-item"><div class="timeline-dot pending">○</div><div class="timeline-text">Hardware Benchmarking</div><div class="timeline-state pending">PENDING</div></div>
+          <div class="timeline-item"><div class="timeline-dot pending">○</div><div class="timeline-text">Multi-Model Reconfiguration</div><div class="timeline-state pending">PENDING</div></div>
+        </div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div class="section-label">TECHNICAL STACK</div>
+      <div class="grid-3">
+        <div class="card"><div class="card-title mb-12">Machine Learning</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="badge badge-cyan">Python</span><span class="badge badge-cyan">TensorFlow</span><span class="badge badge-cyan">TensorFlow Lite</span></div>
+        </div>
+        <div class="card"><div class="card-title mb-12">Data Processing</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="badge badge-green">Pandas</span><span class="badge badge-green">NumPy</span><span class="badge badge-green">Scikit-learn</span></div>
+        </div>
+        <div class="card"><div class="card-title mb-12">Frontend</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="badge badge-cyan">HTML5</span><span class="badge badge-cyan">CSS3</span><span class="badge badge-cyan">JavaScript</span></div>
+        </div>
+        <div class="card"><div class="card-title mb-12">Backend</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="badge badge-green">Python</span><span class="badge badge-green">Flask</span><span class="badge badge-green">SQLite</span></div>
+        </div>
+        <div class="card"><div class="card-title mb-12">Quantization</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="badge badge-amber">INT8</span><span class="badge badge-amber">TFLite</span></div>
+        </div>
+        <div class="card"><div class="card-title mb-12">Future Hardware</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;"><span class="badge badge-gray">FPGA / Zynq</span><span class="badge badge-gray">Planned</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TEAM ======== -->
+    <section class="page-section" id="page-team" aria-label="Team Information">
+      <div class="page-header">
+        <div>
+          <div class="section-label">GROUP B2</div>
+          <h1 class="page-title">Team Tronics</h1>
+          <p class="page-subtitle">Design Adaptive Reconfigurable TinyML Edge Accelerator Using FPGA for Agriculture Applications</p>
+        </div>
+        <span class="badge badge-cyan" style="font-size:12px;">6 MEMBERS</span>
+      </div>
+
+      <div class="grid-3 mb-24">
+        <div class="team-card">
+          <div class="team-avatar">RK</div>
+          <div class="team-name">Ritesh Kawale</div>
+          <div class="team-roll">J-41</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">RA</div>
+          <div class="team-name">Rutuj Adakane</div>
+          <div class="team-roll">J-42</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">SS</div>
+          <div class="team-name">Sahil Sadawarti</div>
+          <div class="team-roll">J-43</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">SK</div>
+          <div class="team-name">Sameer Khonde</div>
+          <div class="team-roll">J-44</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">TK</div>
+          <div class="team-name">Trisha Kanade</div>
+          <div class="team-roll">J-56</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">VK</div>
+          <div class="team-name">Vedant Khorgade</div>
+          <div class="team-roll">J-61</div>
+        </div>
+      </div>
+
+      <div class="card text-center" style="padding:40px;">
+        <div style="font-size:28px; font-weight:800; letter-spacing:0.05em; color:var(--text-primary); margin-bottom:8px;">TEAM TRONICS</div>
+        <div style="font-size:14px; color:var(--text-secondary); margin-bottom:4px;">Group B2</div>
+        <div class="section-label mt-12" style="text-align:center;">
+          Design Adaptive Reconfigurable TinyML Edge Accelerator Using FPGA for Agriculture Applications
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="app-footer" role="contentinfo">
+    <div>
+      <div class="footer-brand">TEAM TRONICS</div>
+      <div class="footer-text">Group B2 · Design Adaptive Reconfigurable TinyML Edge Accelerator Using FPGA for Agriculture Applications</div>
+    </div>
+    <div class="footer-text">© 2026 TEAM TRONICS · AgriTinyML Lab</div>
+  </footer>
+
+</div><!-- end app-shell -->
+
+<script src="/static/js/main.js"></script>
+<script src="/static/js/dashboard.js"></script>
+<script src="/static/js/playground.js"></script>
+<script src="/static/js/evaluation.js"></script>
+<script src="/static/js/comparison.js"></script>
+<script src="/static/js/architecture.js"></script>
+<script src="/static/js/experiments.js"></script>
+<script src="/static/js/project.js"></script>
+<script src="/static/js/team.js"></script>
+</body>
+</html>
