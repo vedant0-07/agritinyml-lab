@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — AgriTinyML Lab</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-void:       #060a0f;
+      --bg-base:       #0d1117;
+      --bg-card:       #161b22;
+      --bg-elevated:   #1c2333;
+      --border-dim:    rgba(48,54,61,0.8);
+      --border-bright: rgba(48,54,61,1);
+      --accent-cyan:   #00ffc8;
+      --accent-green:  #39d353;
+      --accent-amber:  #f0b429;
+      --accent-red:    #ff4444;
+      --accent-blue:   #58a6ff;
+      --text-primary:   #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted:     #484f58;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    /* ── Admin Header ──────────────────────────────────────────────────────── */
+    .a-header {
+      background: rgba(22, 27, 34, 0.95);
+      border-bottom: 2px solid rgba(255, 68, 68, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 58px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+    .a-header-left  { display: flex; align-items: center; gap: 16px; }
+    .a-header-right { display: flex; align-items: center; gap: 12px; }
+
+    .admin-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,68,68,0.15);
+      border: 1px solid rgba(255,68,68,0.5);
+      color: #ff6666;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      animation: pulse-border 2s ease-in-out infinite;
+    }
+    @keyframes pulse-border {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,68,68,0); }
+      50%      { box-shadow: 0 0 0 3px rgba(255,68,68,0.2); }
+    }
+
+    .a-brand {
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .a-brand span { color: var(--accent-cyan); }
+
+    .a-user {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover  { opacity: 0.82; }
+    .btn:active { transform: scale(0.97); }
+    .btn-red    { background: rgba(255,68,68,0.15); color: #ff8080; border: 1px solid rgba(255,68,68,0.3); }
+    .btn-cyan   { background: var(--accent-cyan); color: #000; }
+    .btn-green  { background: rgba(57,211,83,0.15); color: var(--accent-green); border: 1px solid rgba(57,211,83,0.3); }
+    .btn-amber  { background: rgba(240,180,41,0.15); color: var(--accent-amber); border: 1px solid rgba(240,180,41,0.3); }
+    .btn-dim    { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-dim); }
+    .btn-blue   { background: rgba(88,166,255,0.15); color: var(--accent-blue); border: 1px solid rgba(88,166,255,0.3); }
+    .btn-sm     { padding: 5px 10px; font-size: 11px; }
+
+    /* ── Flash Messages ─────────────────────────────────────────────────────── */
+    .flash-wrap { padding: 12px 24px 0; }
+    .flash {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .flash-success { background: rgba(57,211,83,0.1);  border: 1px solid rgba(57,211,83,0.3);  color: var(--accent-green); }
+    .flash-error   { background: rgba(255,68,68,0.1);  border: 1px solid rgba(255,68,68,0.3);  color: #ff8080; }
+    .flash-info    { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); color: var(--accent-blue); }
+    .flash-warning { background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.3); color: var(--accent-amber); }
+
+    /* ── Tab Navigation ─────────────────────────────────────────────────────── */
+    .a-tabs {
+      display: flex;
+      gap: 2px;
+      padding: 16px 24px 0;
+      border-bottom: 1px solid var(--border-dim);
+      background: var(--bg-base);
+    }
+    .a-tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      padding: 10px 18px;
+      cursor: pointer;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .a-tab-btn:hover  { color: var(--text-primary); }
+    .a-tab-btn.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+
+    /* ── Content ────────────────────────────────────────────────────────────── */
+    .a-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
+    .tab-pane   { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Cards ──────────────────────────────────────────────────────────────── */
+    .a-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .a-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .a-card-title .title-badge {
+      font-size: 10px;
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    /* ── Stats Grid ─────────────────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px)  { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .stat-value { font-size: 26px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-cyan); letter-spacing: -0.02em; }
+    .stat-sub   { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* ── Tables ─────────────────────────────────────────────────────────────── */
+    .a-table-wrap { overflow-x: auto; }
+    .a-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .a-table th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-dim);
+      white-space: nowrap;
+    }
+    .a-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(48,54,61,0.4);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .a-table tr:last-child td { border-bottom: none; }
+    .a-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .status-ready  { background: rgba(57,211,83,0.12);  color: var(--accent-green); border: 1px solid rgba(57,211,83,0.3); }
+    .status-soon   { background: rgba(240,180,41,0.12); color: var(--accent-amber); border: 1px solid rgba(240,180,41,0.3); }
+
+    .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* ── Forms ──────────────────────────────────────────────────────────────── */
+    .a-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .a-form-grid { grid-template-columns: 1fr; } }
+
+    .a-form-group { display: flex; flex-direction: column; gap: 6px; }
+    .a-form-group.full { grid-column: 1 / -1; }
+
+    .a-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    .a-label .req { color: var(--accent-red); margin-left: 2px; }
+
+    .a-input, .a-select, .a-textarea {
+      background: var(--bg-base);
+      border: 1px solid var(--border-dim);
+      color: var(--text-primary);
+      border-radius: 7px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+    .a-input:focus, .a-select:focus, .a-textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(0,255,200,0.08);
+    }
+    .a-select option { background: var(--bg-card); }
+    .a-textarea { resize: vertical; min-height: 80px; }
+
+    .a-file-input {
+      background: var(--bg-base);
+      border: 1px dashed rgba(0,255,200,0.3);
+      color: var(--text-secondary);
+      border-radius: 7px;
+      padding: 12px;
+      font-size: 12px;
+      font-family: var(--font-sans);
+      width: 100%;
+      cursor: pointer;
+    }
+    .a-file-input:focus { outline: 2px solid var(--accent-cyan); }
+
+    .a-hint { font-size: 11px; color: var(--text-muted); }
+
+    .a-submit-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    /* ── Pagination ─────────────────────────────────────────────────────────── */
+    .pagination {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--text-secondary);
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      transition: all 0.15s;
+    }
+    .page-btn:hover   { color: var(--accent-cyan); border-color: var(--accent-cyan); }
+    .page-btn.current { color: #000; background: var(--accent-cyan); border-color: var(--accent-cyan); }
+    .page-btn.disabled { opacity: 0.35; pointer-events: none; }
+    .page-info { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+
+    /* ── Filter bar ─────────────────────────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-bar label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── Modal ──────────────────────────────────────────────────────────────── */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.open { display: flex; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      margin: 16px;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    /* ── DB Error ───────────────────────────────────────────────────────────── */
+    .db-error-banner {
+      background: rgba(255,68,68,0.08);
+      border: 1px solid rgba(255,68,68,0.3);
+      color: #ff8080;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── Misc ───────────────────────────────────────────────────────────────── */
+    .mono  { font-family: var(--font-mono); }
+    .green { color: var(--accent-green); }
+    .red   { color: var(--accent-red); }
+    .cyan  { color: var(--accent-cyan); }
+    .muted { color: var(--text-muted); }
+    .section-sep { height: 1px; background: var(--border-dim); margin: 20px 0; }
+  </style>
+</head>
+<body data-active-tab="{{ active_tab }}">
+
+  <!-- ═══════════════════════════════════ HEADER ══════════════════════════════ -->
+  <header class="a-header">
+    <div class="a-header-left">
+      <span class="admin-mode-badge">⚠ ADMIN MODE</span>
+      <span class="a-brand">AgriTinyML <span>Lab</span></span>
+    </div>
+    <div class="a-header-right">
+      <span class="a-user mono">{{ admin_user }}</span>
+      <a href="/" class="btn btn-dim btn-sm" target="_blank">↗ Public Site</a>
+      <a href="/admin/logout" class="btn btn-red btn-sm">Logout</a>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════ FLASH ═══════════════════════════════ -->
+  {% if messages %}
+  <div class="flash-wrap">
+    {% for cat, msg in messages %}
+    <div class="flash flash-{{ cat }}">
+      {% if cat == 'success' %}✓{% elif cat == 'error' %}✗{% elif cat == 'info' %}ℹ{% else %}⚠{% endif %}
+      {{ msg }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ═══════════════════════════════════ TABS ════════════════════════════════ -->
+  <div class="a-tabs">
+    <button class="a-tab-btn" data-tab="overview">📊 Overview</button>
+    <button class="a-tab-btn" data-tab="upload">⬆ Upload Model</button>
+    <button class="a-tab-btn" data-tab="models">◈ Model Registry</button>
+    <button class="a-tab-btn" data-tab="experiments">📋 Experiments</button>
+  </div>
+
+  <!-- ═══════════════════════════════════ CONTENT ═════════════════════════════ -->
+  <div class="a-content">
+
+    {% if db_error %}
+    <div class="db-error-banner">⚠ Database error: {{ db_error }}</div>
+    {% endif %}
+
+    <!-- ─── TAB 1: OVERVIEW (Quick Stats) ──────────────────────────────────── -->
+    <div id="tab-overview" class="tab-pane">
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Experiments</div>
+          <div class="stat-value">{{ stats.get('total', 0) }}</div>
+          <div class="stat-sub">All time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Experiments Today</div>
+          <div class="stat-value" style="color:var(--accent-green);">{{ stats.get('today', 0) }}</div>
+          <div class="stat-sub">Since midnight UTC</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Top Prediction</div>
+          <div class="stat-value" style="font-size:14px; font-weight:700; padding-top:6px; color:var(--text-primary);">
+            {{ (stats.get('most_common') or 'N/A') | truncate(28, True) }}
+          </div>
+          <div class="stat-sub">Most frequent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Inference</div>
+          <div class="stat-value" style="color:var(--accent-amber);">{{ stats.get('avg_ms', 0) }}</div>
+          <div class="stat-sub">Milliseconds</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Top Model</div>
+          <div class="stat-value" style="font-size:13px; font-weight:700; padding-top:6px; color:var(--accent-blue);">
+            {{ (stats.get('top_model') or 'N/A') | truncate(22, True) }}
+          </div>
+          <div class="stat-sub">Most predictions</div>
+        </div>
+      </div>
+
+      <!-- Model status summary -->
+      <div class="a-card">
+        <div class="a-card-title">🗂 Model Registry Summary</div>
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead>
+              <tr>
+                <th>Number</th><th>Name</th><th>Status</th>
+                <th>Accuracy</th><th>TFLite</th><th>Preprocessor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in models %}
+              <tr>
+                <td class="mono cyan">{{ m.model_number }}</td>
+                <td style="color:var(--text-primary); font-weight:600;">{{ m.name }}</td>
+                <td>
+                  {% if m.status == 'ready' %}
+                  <span class="status-badge status-ready">● Ready</span>
+                  {% else %}
+                  <span class="status-badge status-soon">◷ Soon</span>
+                  {% endif %}
+                </td>
+                <td class="mono">{{ ('%.2f%%' | format(m.accuracy)) if m.accuracy else '—' }}</td>
+                <td>{{ '<span class="green">✓ Yes</span>' | safe if m.tflite_url else '<span class="muted">✗ No</span>' | safe }}</td>
+                <td>{{ '<span class="green">✓ Yes</span>' | safe if m.preprocessor_url else '<span class="muted">✗ No</span>' | safe }}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="6" class="muted" style="text-align:center; padding:24px;">No models in registry</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-overview -->
+
+
+    <!-- ─── TAB 2: UPLOAD MODEL ─────────────────────────────────────────────── -->
+    <div id="tab-upload" class="tab-pane">
+      <div class="a-card">
+        <div class="a-card-title">⬆ Upload New Model Files</div>
+
+        <form method="POST" action="/admin/upload" enctype="multipart/form-data">
+          <div class="a-form-grid">
+
+            <div class="a-form-group">
+              <label class="a-label">Model Number<span class="req">*</span></label>
+              <select name="model_number" class="a-select" required>
+                <option value="">— Select —</option>
+                <option value="MODEL_01">MODEL_01 — Irrigation Prediction</option>
+                <option value="MODEL_02">MODEL_02 — Crop Disease Detection</option>
+                <option value="MODEL_03">MODEL_03 — Pest Identification</option>
+                <option value="MODEL_04">MODEL_04 — Fertilizer Recommendation</option>
+              </select>
+            </div>
+
+            <div class="a-form-group">
+              <label class="a-label">Model Name<span class="req">*</span></label>
+              <input type="text" name="model_name" class="a-input" placeholder="e.g. Irrigation Prediction" required>
+            </div>
+
+            <div class="a-form-group full">
+              <label class="a-label">Description</label>
+              <textarea name="description" class="a-textarea"
+                placeholder="Brief description of what this model does, input data, and use case."></textarea>
+            </div>
+
+            <div class="a-form-group">
+              <label class="a-label">Architecture</label>
+              <select name="architecture" class="a-select">
+                <option value="">— Select —</option>
+                <option value="MLP">MLP (Multi-Layer Perceptron)</option>
+                <option value="CNN">CNN (Convolutional Neural Network)</option>
+                <option value="Decision Tree">Decision Tree</option>
+                <option value="Random Forest">Random Forest</option>
+                <option value="LSTM">LSTM</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="a-form-group">
+              <label class="a-label">Expected Accuracy (%)</label>
+              <input type="number" name="accuracy" class="a-input" min="0" max="100" step="0.01"
+                     placeholder="e.g. 96.05">
+            </div>
+
+            <div class="a-form-group full">
+              <label class="a-label">Input Features</label>
+              <input type="text" name="input_features" class="a-input"
+                     placeholder="e.g. CropType (one-hot 9), CropDays, SoilMoisture, Temperature, Humidity">
+            </div>
+
+            <div class="a-form-group full">
+              <label class="a-label">Output Classes <span class="a-hint">(one per line)</span></label>
+              <textarea name="output_classes" class="a-textarea" rows="4"
+                placeholder="0=No Irrigation Required&#10;1=Irrigation Required"></textarea>
+            </div>
+
+            <div class="a-form-group">
+              <label class="a-label">TFLite Model File (.tflite)<span class="req">*</span></label>
+              <input type="file" name="tflite_file" class="a-file-input" accept=".tflite" required>
+              <span class="a-hint">Uploaded to Supabase Storage as model_int8.tflite</span>
+            </div>
+
+            <div class="a-form-group">
+              <label class="a-label">Preprocessor File (.pkl) <span class="a-hint">optional</span></label>
+              <input type="file" name="pkl_file" class="a-file-input" accept=".pkl">
+              <span class="a-hint">Uploaded as preprocessor.pkl — leave empty if not applicable</span>
+            </div>
+
+          </div>
+
+          <div class="section-sep"></div>
+
+          <div class="a-submit-row">
+            <button type="submit" class="btn btn-cyan">⬆ Upload &amp; Save to Database</button>
+            <span class="a-hint">Files are uploaded to Supabase Storage &rarr; URLs saved to models table &rarr; status set to READY</span>
+          </div>
+        </form>
+      </div>
+    </div><!-- /tab-upload -->
+
+
+    <!-- ─── TAB 3: MODEL REGISTRY ───────────────────────────────────────────── -->
+    <div id="tab-models" class="tab-pane">
+      <div class="a-card">
+        <div class="a-card-title">
+          ◈ Model Registry
+          <span class="title-badge">{{ models | length }} Models</span>
+        </div>
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Accuracy</th>
+                <th>TFLite</th>
+                <th>Uploaded At</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in models %}
+              <tr>
+                <td class="mono cyan">{{ m.model_number }}</td>
+                <td style="color:var(--text-primary); font-weight:600; max-width:160px;">{{ m.name }}</td>
+                <td>
+                  {% if m.status == 'ready' %}
+                  <span class="status-badge status-ready">● Ready</span>
+                  {% else %}
+                  <span class="status-badge status-soon">◷ Soon</span>
+                  {% endif %}
+                </td>
+                <td class="mono">{{ ('%.2f%%' | format(m.accuracy)) if m.accuracy else '—' }}</td>
+                <td>
+                  {% if m.tflite_url %}
+                  <a href="{{ m.tflite_url }}" class="green" style="font-size:11px; text-decoration:none;" target="_blank" title="{{ m.tflite_url }}">✓ Linked</a>
+                  {% else %}
+                  <span class="muted">—</span>
+                  {% endif %}
+                </td>
+                <td class="mono" style="font-size:11px;">
+                  {{ m.uploaded_at.strftime('%Y-%m-%d %H:%M') if m.uploaded_at else '—' }}
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <!-- Toggle Status -->
+                    <form method="POST" action="/admin/model/{{ m.model_number }}/toggle" style="display:inline;">
+                      <button type="submit" class="btn btn-sm {% if m.status == 'ready' %}btn-amber{% else %}btn-green{% endif %}"
+                              title="Toggle status">
+                        {% if m.status == 'ready' %}⏸ Disable{% else %}▶ Enable{% endif %}
+                      </button>
+                    </form>
+                    <!-- Edit -->
+                    <button type="button" class="btn btn-sm btn-blue admin-edit-btn"
+                            data-model="{{ m.model_number }}"
+                            data-name="{{ m.name | e }}"
+                            data-accuracy="{{ m.accuracy if m.accuracy is not none else '' }}"
+                            data-desc="{{ m.description | e if m.description else '' }}"
+                            title="Edit metadata">
+                      ✎ Edit
+                    </button>
+                    <!-- Reset -->
+                    <form method="POST" action="/admin/model/{{ m.model_number }}/reset" style="display:inline;">
+                      <button type="submit" class="btn btn-sm btn-red admin-reset-btn"
+                              data-model="{{ m.model_number }}"
+                              title="Reset to defaults">↺ Reset</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="7" class="muted" style="text-align:center; padding:24px;">No models found</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-models -->
+
+
+    <!-- ─── TAB 4: EXPERIMENTS ──────────────────────────────────────────────── -->
+    <div id="tab-experiments" class="tab-pane">
+      <div class="a-card">
+        <div class="a-card-title">
+          📋 Experiment Logs
+          <span class="title-badge">{{ total_exp }} Total</span>
+        </div>
+
+        <!-- Filter & Actions Bar -->
+        <div class="filter-bar">
+          <label>Filter:</label>
+          <form method="GET" action="/admin/dashboard" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <input type="hidden" name="tab" value="experiments">
+            <select name="pred" class="a-select" style="padding:6px 10px; font-size:12px; width:auto;"
+                    onchange="this.form.submit()">
+              <option value=""   {% if not pred_filter %}selected{% endif %}>All predictions</option>
+              <option value="Irrigation Required" {% if pred_filter == 'Irrigation Required' %}selected{% endif %}>Irrigation Required</option>
+              <option value="No Irrigation"       {% if pred_filter == 'No Irrigation' %}selected{% endif %}>No Irrigation Required</option>
+            </select>
+          </form>
+          <div style="margin-left:auto; display:flex; gap:8px;">
+            <a href="/admin/experiments/export" class="btn btn-green btn-sm">⬇ Export CSV</a>
+            <form method="POST" action="/admin/experiments/clear" style="display:inline;"
+                  onsubmit="return confirm('Delete ALL {{ total_exp }} experiment records? This cannot be undone.')">
+              <button type="submit" class="btn btn-red btn-sm">✗ Clear All</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="a-table-wrap">
+          <table class="a-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Timestamp</th>
+                <th>Model</th>
+                <th>Crop</th>
+                <th>Days</th>
+                <th>Moisture</th>
+                <th>Temp</th>
+                <th>Humidity</th>
+                <th>Prediction</th>
+                <th>Prob %</th>
+                <th>Engine</th>
+                <th>ms</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in experiments %}
+              <tr>
+                <td class="mono muted">{{ e.id }}</td>
+                <td class="mono" style="font-size:11px; white-space:nowrap;">
+                  {{ e.timestamp[:19].replace('T', ' ') if e.timestamp else '—' }}
+                </td>
+                <td style="color:var(--text-secondary);">{{ e.model_name or '—' }}</td>
+                <td>{{ e.crop_type or '—' }}</td>
+                <td class="mono">{{ e.crop_days if e.crop_days is not none else '—' }}</td>
+                <td class="mono">{{ e.soil_moisture if e.soil_moisture is not none else '—' }}</td>
+                <td class="mono">{{ e.temperature if e.temperature is not none else '—' }}</td>
+                <td class="mono">{{ e.humidity if e.humidity is not none else '—' }}</td>
+                <td>
+                  {% if e.prediction and 'No Irrigation' in e.prediction %}
+                  <span style="color:var(--accent-cyan); font-size:11px; font-weight:600;">{{ e.prediction }}</span>
+                  {% else %}
+                  <span style="color:var(--accent-green); font-size:11px; font-weight:600;">{{ e.prediction or '—' }}</span>
+                  {% endif %}
+                </td>
+                <td class="mono">{{ ('%.1f' | format(e.probability * 100)) if e.probability is not none else '—' }}</td>
+                <td style="font-size:11px; color:var(--text-muted);">{{ e.engine or '—' }}</td>
+                <td class="mono" style="color:var(--accent-amber);">{{ e.inference_time_ms if e.inference_time_ms is not none else '—' }}</td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="12" style="text-align:center; padding:32px; color:var(--text-muted);">
+                  No experiments recorded yet. Run a prediction from the playground.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <div class="pagination">
+          <a href="/admin/dashboard?tab=experiments&page={{ [current_page - 1, 1] | max }}&pred={{ pred_filter }}"
+             class="page-btn {% if current_page <= 1 %}disabled{% endif %}">‹</a>
+
+          {% for p in range(1, total_pages + 1) %}
+            {% if p == 1 or p == total_pages or (p >= current_page - 2 and p <= current_page + 2) %}
+              <a href="/admin/dashboard?tab=experiments&page={{ p }}&pred={{ pred_filter }}"
+                 class="page-btn {% if p == current_page %}current{% endif %}">{{ p }}</a>
+            {% elif p == current_page - 3 or p == current_page + 3 %}
+              <span class="page-info">…</span>
+            {% endif %}
+          {% endfor %}
+
+          <a href="/admin/dashboard?tab=experiments&page={{ [current_page + 1, total_pages] | min }}&pred={{ pred_filter }}"
+             class="page-btn {% if current_page >= total_pages %}disabled{% endif %}">›</a>
+
+          <span class="page-info">Page {{ current_page }} / {{ total_pages }} · {{ total_exp }} records</span>
+        </div>
+        {% endif %}
+
+      </div>
+    </div><!-- /tab-experiments -->
+
+  </div><!-- /a-content -->
+
+
+  <!-- ═══════════════════════════════════ EDIT MODAL ═══════════════════════════ -->
+  <div class="modal-bg" id="edit-modal">
+    <div class="modal-box">
+      <div class="modal-title">✎ Edit Model — <span id="modal-model-num" style="color:var(--accent-cyan);"></span></div>
+      <form method="POST" id="edit-form" action="">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="a-form-group">
+            <label class="a-label">Model Name</label>
+            <input type="text" name="name" id="modal-name" class="a-input" required>
+          </div>
+          <div class="a-form-group">
+            <label class="a-label">Description</label>
+            <textarea name="description" id="modal-desc" class="a-textarea" rows="4"></textarea>
+          </div>
+          <div class="a-form-group">
+            <label class="a-label">Accuracy (%)</label>
+            <input type="number" name="accuracy" id="modal-accuracy" class="a-input"
+                   min="0" max="100" step="0.01" placeholder="e.g. 96.05">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-dim" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn btn-cyan">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // ── Tab switching ─────────────────────────────────────────────────────────
+    const activeTab = document.body.dataset.activeTab || 'overview';
+
+    document.querySelectorAll('.a-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        // Deactivate all
+        document.querySelectorAll('.a-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        // Activate target
+        btn.classList.add('active');
+        document.getElementById(`tab-${tab}`)?.classList.add('active');
+        // Update URL without reload
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tab);
+        url.searchParams.delete('page');
+        history.pushState({}, '', url);
+      });
+    });
+
+    // Activate tab from URL param or server-rendered value
+    (function() {
+      const btn = document.querySelector(`.a-tab-btn[data-tab="${activeTab}"]`);
+      const pane = document.getElementById(`tab-${activeTab}`);
+      if (btn && pane) {
+        btn.classList.add('active');
+        pane.classList.add('active');
+      } else {
+        document.querySelector('.a-tab-btn')?.classList.add('active');
+        document.querySelector('.tab-pane')?.classList.add('active');
+      }
+    })();
+
+
+    // == Edit Modal: reads data-* attributes (no inline JS escaping needed) ===
+    function openEditModal(modelNum, name, accuracy, desc) {
+      document.getElementById('modal-model-num').textContent = modelNum;
+      document.getElementById('modal-name').value = name || '';
+      document.getElementById('modal-desc').value = desc || '';
+      document.getElementById('modal-accuracy').value = accuracy || '';
+      document.getElementById('edit-form').action = '/admin/model/' + modelNum + '/edit';
+      document.getElementById('edit-modal').classList.add('open');
+    }
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('open');
+    }
+    document.querySelectorAll('.admin-edit-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        openEditModal(this.dataset.model, this.dataset.name, this.dataset.accuracy, this.dataset.desc);
+      });
+    });
+    document.querySelectorAll('.admin-reset-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        if (!confirm('Reset ' + this.dataset.model + ' to defaults? This removes file URLs and sets status to coming_soon.')) e.preventDefault();
+      });
+    });
+    document.getElementById('edit-modal').addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeEditModal(); });
+    setTimeout(function() {
+      document.querySelectorAll('.flash').forEach(function(el) {
+        el.style.transition = 'opacity 0.5s'; el.style.opacity = '0';
+        setTimeout(function() { el.remove(); }, 500);
+      });
+    }, 5000);
+  </script>
+</body>
+</html>

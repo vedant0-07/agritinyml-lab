@@ -7,6 +7,7 @@ URL: http://127.0.0.1:5000
 
 import os
 import sys
+from datetime import timedelta
 
 from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
@@ -23,20 +24,35 @@ app = Flask(
 CORS(app)
 app.config["JSON_SORT_KEYS"] = False
 
+# Secret key for admin sessions (MUST be set as env var in production)
+app.config["SECRET_KEY"] = os.environ.get(
+    "FLASK_SECRET_KEY",
+    os.urandom(32)  # fallback: sessions reset on restart — acceptable for local dev
+)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=8)
+
 # --- Register API Blueprints ---
 from backend.api.predict import predict_bp
 from backend.api.evaluate import evaluate_bp
 from backend.api.history import history_bp
 from backend.api.project import project_bp
+from backend.api.admin import admin_bp
 
 app.register_blueprint(predict_bp)
 app.register_blueprint(evaluate_bp)
 app.register_blueprint(history_bp)
 app.register_blueprint(project_bp)
+app.register_blueprint(admin_bp)
 
-# --- Initialize Database ---
-from backend.database.db import init_db
-init_db()
+# --- Initialize Database (Supabase PostgreSQL) ---
+try:
+    from backend.database.db import init_db
+    init_db()
+    print("[AgriTinyML] Database: connected and tables ready (Supabase PostgreSQL)")
+except Exception as _db_err:
+    print(f"[AgriTinyML] WARNING: Database init failed — {_db_err}")
+    print("[AgriTinyML] Ensure DATABASE_URL environment variable is set correctly.")
+
 
 # --- Load Models at Startup ---
 from backend.inference.manager import inference_manager

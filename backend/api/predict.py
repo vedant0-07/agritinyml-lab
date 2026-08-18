@@ -77,25 +77,30 @@ def predict(model_id: str):
     label = LABEL_MAP.get(prediction, "Unknown")
     ts = datetime.now(timezone.utc).isoformat()
 
-    # Save to history
+    # Save to experiment history (PostgreSQL via Supabase)
     try:
         save_experiment({
-            "timestamp": ts,
-            "model_id": model_id,
-            "crop_type": crop_type,
-            "crop_days": float(crop_days),
-            "soil_moisture": float(soil_moisture),
-            "temperature": float(temperature),
-            "humidity": float(humidity),
-            "prediction": prediction,
-            "label": label,
-            "probability": probability,
-            "inference_engine": "TFLite",
+            "model_id":         1,                    # MODEL_01 row id in models table
+            "model_name":       "Irrigation Prediction",
+            "crop_type":        crop_type,
+            "crop_days":        int(float(crop_days)),
+            "soil_moisture":    float(soil_moisture),
+            "temperature":      float(temperature),
+            "humidity":         float(humidity),
+            "prediction":       label,                # store label string e.g. "Irrigation Required"
+            "probability":      probability,
+            "engine":           "TFLite INT8",
             "inference_time_ms": result.get("inference_time_ms"),
-            "backend": result.get("backend", "tflite"),
+            "inputs": {
+                "crop_type":     crop_type,
+                "crop_days":     float(crop_days),
+                "soil_moisture": float(soil_moisture),
+                "temperature":   float(temperature),
+                "humidity":      float(humidity),
+            },
         })
     except Exception:
-        pass  # History save failure should not break prediction response
+        pass  # History save failure must not break the prediction response
 
     return jsonify({
         "success": True,

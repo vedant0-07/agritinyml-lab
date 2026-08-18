@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — AgriTinyML Lab</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-void:     #060a0f;
+      --bg-base:     #0d1117;
+      --bg-card:     #161b22;
+      --bg-elevated: #1c2333;
+      --border-dim:  rgba(48,54,61,0.8);
+      --border-glow: rgba(0,255,200,0.2);
+      --accent-cyan: #00ffc8;
+      --accent-red:  #ff4444;
+      --text-primary:   #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted:     #484f58;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(0,255,200,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0,180,255,0.03) 0%, transparent 40%);
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,68,68,0.15);
+      border: 1px solid rgba(255,68,68,0.4);
+      color: #ff6666;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0,255,200,0.04), 0 24px 48px rgba(0,0,0,0.5);
+    }
+
+    .login-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .login-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .alert-error {
+      background: rgba(255,68,68,0.1);
+      border: 1px solid rgba(255,68,68,0.3);
+      color: #ff8080;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-base);
+      border: 1px solid var(--border-dim);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(0,255,200,0.08);
+    }
+
+    .login-btn {
+      width: 100%;
+      background: var(--accent-cyan);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font-sans);
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .login-btn:hover  { opacity: 0.88; }
+    .login-btn:active { transform: scale(0.98); }
+
+    .login-footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .login-footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+    .login-footer a:hover { text-decoration: underline; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-dim);
+      margin: 24px 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <span class="login-icon">🔒</span>
+      <div style="display:flex; justify-content:center; margin-bottom:16px;">
+        <span class="admin-badge">⚠ Admin Access Only</span>
+      </div>
+      <h1 class="login-title">AgriTinyML Lab</h1>
+      <p class="login-sub">Administrative Panel &mdash; TEAM TRONICS &middot; Group B2</p>
+
+      {% if error %}
+      <div class="alert-error">{{ error }}</div>
+      {% endif %}
+
+      <form method="POST" action="/admin/login" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-input"
+                 placeholder="Admin username" autocomplete="username" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-input"
+                 placeholder="Admin password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="login-btn">Login &rarr;</button>
+      </form>
+
+      <hr class="divider">
+      <div class="login-footer">
+        <a href="/">&larr; Back to AgriTinyML Lab</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

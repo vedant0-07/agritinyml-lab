@@ -39,7 +39,7 @@ PROJECT_STATUS = {
         "Support multiple agricultural AI workloads through an adaptive/reconfigurable architecture.",
         "Reduce computational and memory requirements through TinyML and INT8 quantization.",
         "Evaluate the performance of software inference and eventually FPGA-based acceleration.",
-        "Develop a scalable platform for agriculture applications such as irrigation prediction, disease detection, pest identification and soil monitoring."
+        "Develop a scalable platform for agriculture applications such as irrigation prediction, disease detection, pest identification and fertilizer recommendation."
     ],
     "tech_stack": {
         "ml": ["Python", "TensorFlow", "TensorFlow Lite"],
