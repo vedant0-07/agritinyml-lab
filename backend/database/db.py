@@ -22,7 +22,7 @@ import psycopg2.extras
 
 log = logging.getLogger(__name__)
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = (os.environ.get("DATABASE_URL") or "").strip() or None
 if not DATABASE_URL:
     log.warning(
         "[DB] DATABASE_URL is not set. Database features will be unavailable "
