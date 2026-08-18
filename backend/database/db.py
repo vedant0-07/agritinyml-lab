@@ -41,7 +41,7 @@ def get_conn():
             "DATABASE_URL environment variable is not set. "
             "Set it to your Supabase connection string and restart the app."
         )
-    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor, connect_timeout=10)
     try:
         yield conn
         conn.commit()
