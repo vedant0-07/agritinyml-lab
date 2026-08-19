@@ -21,6 +21,7 @@ from backend.database.db import (
     toggle_model_status, set_model_files,
     get_experiment_stats, get_experiments_page,
     delete_experiments, experiments_to_csv,
+    upsert_model_full,
 )
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -225,18 +226,21 @@ def upload_model():
         flash(f"Storage upload failed: {exc}", "error")
         return redirect(url_for("admin.dashboard", tab="upload"))
 
-    # ── Update database ───────────────────────────────────────────────────────
+    # ── Upsert database (INSERT new / UPDATE existing) ────────────────────────
     try:
-        update_model_metadata(model_number, {
-            "name":          model_name,
-            "description":   description,
-            "architecture":  architecture,
-            "input_features": input_features,
-            "output_classes": output_classes,
-            "accuracy":      accuracy,
-        })
-        set_model_files(model_number, tflite_url=tflite_url, preprocessor_url=pkl_url)
-        flash(f"✓ {model_name or model_number} uploaded and marked as READY.", "success")
+        action = upsert_model_full(
+            model_number   = model_number,
+            name           = model_name or model_number,
+            description    = description,
+            architecture   = architecture,
+            input_features = input_features,
+            output_classes = output_classes,
+            accuracy       = accuracy,
+            tflite_url     = tflite_url,
+            preprocessor_url = pkl_url,
+        )
+        verb = "Created" if action == "created" else "Updated"
+        flash(f"✓ {verb}: {model_name or model_number} is now READY.", "success")
     except Exception as exc:
         flash(f"Database update failed: {exc}", "error")
 

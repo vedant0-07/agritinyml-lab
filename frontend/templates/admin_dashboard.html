@@ -535,13 +535,24 @@
 
             <div class="a-form-group">
               <label class="a-label">Model Number<span class="req">*</span></label>
-              <select name="model_number" class="a-select" required>
-                <option value="">— Select —</option>
-                <option value="MODEL_01">MODEL_01 — Irrigation Prediction</option>
-                <option value="MODEL_02">MODEL_02 — Crop Disease Detection</option>
-                <option value="MODEL_03">MODEL_03 — Pest Identification</option>
-                <option value="MODEL_04">MODEL_04 — Fertilizer Recommendation</option>
-              </select>
+              <input type="text" name="model_number" id="upload-model-num"
+                     class="a-input" list="model-num-list" required
+                     placeholder="e.g. MODEL_05"
+                     pattern="MODEL_\d{2,}"
+                     title="Format: MODEL_XX (e.g. MODEL_01, MODEL_05)"
+                     autocomplete="off"
+                     style="text-transform:uppercase;"
+                     oninput="this.value=this.value.toUpperCase(); updateModelBadge(this.value)">
+              <datalist id="model-num-list">
+                {% for m in models %}
+                <option value="{{ m.model_number }}">{{ m.model_number }} — {{ m.name }}</option>
+                {% endfor %}
+                <option value="MODEL_05">MODEL_05 — New Model</option>
+                <option value="MODEL_06">MODEL_06 — New Model</option>
+                <option value="MODEL_07">MODEL_07 — New Model</option>
+                <option value="MODEL_08">MODEL_08 — New Model</option>
+              </datalist>
+              <div id="model-num-badge" style="margin-top:5px; font-size:11px; display:none;"></div>
             </div>
 
             <div class="a-form-group">
@@ -832,6 +843,22 @@
 
 
   <script>
+    // ── Model Number Badge (new vs existing) ───────────────────────────────────
+    var _existingModels = [{% for m in models %}"{{ m.model_number }}"{% if not loop.last %},{% endif %}{% endfor %}];
+
+    function updateModelBadge(val) {
+      var badge = document.getElementById('model-num-badge');
+      if (!badge) return;
+      val = (val || '').trim().toUpperCase();
+      if (!val) { badge.style.display = 'none'; return; }
+      badge.style.display = 'block';
+      if (_existingModels.indexOf(val) >= 0) {
+        badge.innerHTML = '<span style="color:var(--accent-amber);">⚠ Will UPDATE existing model</span>';
+      } else {
+        badge.innerHTML = '<span style="color:var(--accent-green);">✦ Will CREATE new model</span>';
+      }
+    }
+
     // ── Tab switching ─────────────────────────────────────────────────────────
     const activeTab = document.body.dataset.activeTab || 'overview';
 

@@ -342,6 +342,40 @@ def update_model_metadata(model_number: str, fields: dict) -> bool:
         return cur.rowcount > 0
 
 
+def upsert_model_full(model_number: str, name: str, description: str,
+                      architecture: str, input_features: str, output_classes: str,
+                      accuracy=None, tflite_url=None, preprocessor_url=None) -> str:
+    """Insert a new model or fully update an existing one.
+    Returns 'created' if a new row was inserted, 'updated' if an existing row was changed.
+    Uses PostgreSQL UPSERT so model_number doesn't have to be in the fixed seed list.
+    """
+    with get_conn() as conn:
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO models (
+                model_number, name, description, architecture,
+                input_features, output_classes, accuracy,
+                tflite_url, preprocessor_url, status, uploaded_by
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'ready', 'TEAM TRONICS')
+            ON CONFLICT (model_number) DO UPDATE SET
+                name             = EXCLUDED.name,
+                description      = EXCLUDED.description,
+                architecture     = EXCLUDED.architecture,
+                input_features   = EXCLUDED.input_features,
+                output_classes   = EXCLUDED.output_classes,
+                accuracy         = EXCLUDED.accuracy,
+                tflite_url       = EXCLUDED.tflite_url,
+                preprocessor_url = EXCLUDED.preprocessor_url,
+                status           = 'ready'
+            RETURNING (xmax = 0) AS is_insert
+        """, (model_number, name, description, architecture,
+              input_features, output_classes, accuracy,
+              tflite_url, preprocessor_url))
+        row = cur.fetchone()
+        return "created" if row and row["is_insert"] else "updated"
+
+
+
 def reset_model_to_seed(model_number: str) -> bool:
     """Reset a model row to its original seed defaults (coming_soon, no files)."""
     seed = next((m for m in _SEED_MODELS if m["model_number"] == model_number), None)
