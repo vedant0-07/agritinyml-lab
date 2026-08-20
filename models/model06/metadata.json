@@ -1,0 +1,16 @@
+{
+  "model_number": "MODEL_06",
+  "name": "Test 2",
+  "description": "Fertilizer recommendation model (Test 2). MLP-based INT8 quantized model with 22 input features and 7 output fertilizer recommendation classes.",
+  "architecture": "MLP",
+  "input_shape": [1, 22],
+  "output_shape": [1, 7],
+  "input_features": "22 mixed soil and crop parameters",
+  "output_classes": [
+    "Class_0", "Class_1", "Class_2", "Class_3",
+    "Class_4", "Class_5", "Class_6"
+  ],
+  "accuracy": null,
+  "quantization": "INT8",
+  "status": "coming_soon"
+}

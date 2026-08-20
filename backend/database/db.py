@@ -164,6 +164,40 @@ _SEED_MODELS = [
         "status": "coming_soon",
         "uploaded_by": "TEAM TRONICS",
     },
+    {
+        "model_number": "MODEL_05",
+        "name": "Test 1",
+        "description": (
+            "Fertilizer recommendation model — Test 1. INT8 quantized MLP with 33 input features "
+            "and 19 output classes. Advanced multi-parameter soil analysis for fertilizer selection."
+        ),
+        "architecture": "MLP",
+        "input_features": "33 mixed soil and crop parameters (NPK, pH, moisture, temperature, crop type, etc.)",
+        "output_classes": "19 fertilizer recommendation classes",
+        "accuracy": None,
+        "model_size_kb": round(25880 / 1024, 1),
+        "tflite_url": None,
+        "preprocessor_url": None,
+        "status": "coming_soon",
+        "uploaded_by": "TEAM TRONICS",
+    },
+    {
+        "model_number": "MODEL_06",
+        "name": "Test 2",
+        "description": (
+            "Fertilizer recommendation model — Test 2. INT8 quantized MLP with 22 input features "
+            "and 7 output classes. Compact model for rapid fertilizer recommendation."
+        ),
+        "architecture": "MLP",
+        "input_features": "22 mixed soil and crop parameters (NPK, pH, moisture, temperature, etc.)",
+        "output_classes": "7 fertilizer recommendation classes",
+        "accuracy": None,
+        "model_size_kb": round(9072 / 1024, 1),
+        "tflite_url": None,
+        "preprocessor_url": None,
+        "status": "coming_soon",
+        "uploaded_by": "TEAM TRONICS",
+    },
 ]
 
 
