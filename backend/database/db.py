@@ -168,12 +168,16 @@ _SEED_MODELS = [
         "model_number": "MODEL_05",
         "name": "Test 1",
         "description": (
-            "Fertilizer recommendation model — Test 1. INT8 quantized MLP with 33 input features "
-            "and 19 output classes. Advanced multi-parameter soil analysis for fertilizer selection."
+            "Fertilizer recommendation model — Test 1. INT8 quantized MLP trained on 9 soil and "
+            "environmental parameters. Recommends one of 19 specific fertilizer products."
         ),
         "architecture": "MLP",
-        "input_features": "33 mixed soil and crop parameters (NPK, pH, moisture, temperature, crop type, etc.)",
-        "output_classes": "19 fertilizer recommendation classes",
+        "input_features": "Temperature, Humidity, Moisture, Nitrogen, Potassium, Phosphorous, Soil Type, Crop Type, pH",
+        "output_classes": (
+            "10:10:10 NPK, 10:26:26 NPK, 12:32:16 NPK, 13:32:26 NPK, 18:46:00 NPK, "
+            "19:19:19 NPK, 20:20:20 NPK, 50:26:26 NPK, Ammonium Sulphate, Chilated Micronutrient, "
+            "DAP, Ferrous Sulphate, Hydrated Lime, MOP, Magnesium Sulphate, SSP, Sulphur, Urea, White Potash"
+        ),
         "accuracy": None,
         "model_size_kb": round(25880 / 1024, 1),
         "tflite_url": None,
@@ -185,12 +189,12 @@ _SEED_MODELS = [
         "model_number": "MODEL_06",
         "name": "Test 2",
         "description": (
-            "Fertilizer recommendation model — Test 2. INT8 quantized MLP with 22 input features "
-            "and 7 output classes. Compact model for rapid fertilizer recommendation."
+            "Fertilizer recommendation model — Test 2. Compact INT8 quantized MLP trained on 8 soil "
+            "and environmental parameters. Recommends one of 7 fertilizer products."
         ),
         "architecture": "MLP",
-        "input_features": "22 mixed soil and crop parameters (NPK, pH, moisture, temperature, etc.)",
-        "output_classes": "7 fertilizer recommendation classes",
+        "input_features": "Temperature, Humidity, Moisture, Soil Type, Crop Type, Nitrogen, Potassium, Phosphorous",
+        "output_classes": "10-26-26, 14-35-14, 17-17-17, 20-20, 28-28, DAP, Urea",
         "accuracy": None,
         "model_size_kb": round(9072 / 1024, 1),
         "tflite_url": None,
