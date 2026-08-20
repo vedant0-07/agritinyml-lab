@@ -124,3 +124,130 @@ def predict(model_id: str):
             "humidity": float(humidity)
         }
     })
+
+
+# ── Fertilizer Routes ─────────────────────────────────────────────────────────
+
+from backend.preprocessing.fertilizer import (
+    fertilizer1_preprocessor, fertilizer2_preprocessor,
+    MODEL05_CLASSES, MODEL06_CLASSES,
+)
+
+
+def _fertilizer_predict(model_key: str, preprocessor, classes: list, model_label: str,
+                         model_db_id: int, raw_inputs: dict) -> tuple:
+    """
+    Shared helper for fertilizer1 and fertilizer2 predictions.
+    Returns (response_dict, http_status_code).
+    """
+    # Validate
+    is_valid, validation_error = preprocessor.validate(raw_inputs)
+    if not is_valid:
+        return {"success": False, "error": validation_error}, 422
+
+    if preprocessor.status != "ready":
+        return {
+            "success": False,
+            "error": f"Preprocessor unavailable: {preprocessor.error_message}",
+            "hint": "This model's preprocessor could not be loaded. Check server logs."
+        }, 503
+
+    # Preprocess
+    try:
+        features = preprocessor.preprocess(raw_inputs)
+    except Exception as e:
+        return {"success": False, "error": f"Preprocessing error: {e}"}, 500
+
+    # Infer
+    result = inference_manager.predict(model_key, features, backend_type="tflite")
+    if not result.get("success"):
+        return {"success": False, "error": result.get("error", "Inference failed.")}, 503
+
+    prediction  = result["prediction"]
+    probability = result["probability"]
+    label       = preprocessor.class_label(prediction)
+    ts          = datetime.now(timezone.utc).isoformat()
+
+    # Save to experiment history
+    try:
+        save_experiment({
+            "model_id":          model_db_id,
+            "model_name":        model_label,
+            "prediction":        label,
+            "probability":       probability,
+            "engine":            "TFLite INT8",
+            "inference_time_ms": result.get("inference_time_ms"),
+            "inputs":            raw_inputs,
+        })
+    except Exception:
+        pass
+
+    return {
+        "success":          True,
+        "model":            model_label,
+        "model_id":         model_key,
+        "prediction":       prediction,
+        "label":            label,
+        "probability":      probability,
+        "probability_pct":  round(probability * 100, 2),
+        "probabilities":    result.get("probabilities"),
+        "classes":          classes,
+        "inference_engine": "TensorFlow Lite",
+        "inference_time_ms": result.get("inference_time_ms"),
+        "backend":          result.get("backend", "tflite"),
+        "execution":        "Software / CPU",
+        "fpga_status":      "Not Connected",
+        "timestamp":        ts,
+        "inputs":           raw_inputs,
+    }, 200
+
+
+@predict_bp.route("/api/predict/fertilizer1", methods=["POST"])
+def predict_fertilizer1():
+    """MODEL_05 — Test 1: 9 inputs → 19 fertilizer classes."""
+    data = request.get_json(silent=True) or {}
+    raw_inputs = {
+        "Temperature": data.get("temperature") or data.get("Temperature"),
+        "Humidity":    data.get("humidity")    or data.get("Humidity"),
+        "Moisture":    data.get("moisture")    or data.get("Moisture"),
+        "Nitrogen":    data.get("nitrogen")    or data.get("Nitrogen"),
+        "Potassium":   data.get("potassium")   or data.get("Potassium"),
+        "Phosphorous": data.get("phosphorous") or data.get("Phosphorous"),
+        "Soil Type":   data.get("soil_type")   or data.get("Soil Type"),
+        "Crop Type":   data.get("crop_type")   or data.get("Crop Type"),
+        "pH":          data.get("ph")          or data.get("pH"),
+    }
+    resp, code = _fertilizer_predict(
+        model_key    = "fertilizer1",
+        preprocessor = fertilizer1_preprocessor,
+        classes      = MODEL05_CLASSES,
+        model_label  = "Test 1 — Fertilizer Recommendation",
+        model_db_id  = 5,
+        raw_inputs   = raw_inputs,
+    )
+    return jsonify(resp), code
+
+
+@predict_bp.route("/api/predict/fertilizer2", methods=["POST"])
+def predict_fertilizer2():
+    """MODEL_06 — Test 2: 8 inputs → 7 fertilizer classes."""
+    data = request.get_json(silent=True) or {}
+    raw_inputs = {
+        "Temperature": data.get("temperature") or data.get("Temperature"),
+        "Humidity":    data.get("humidity")    or data.get("Humidity"),
+        "Moisture":    data.get("moisture")    or data.get("Moisture"),
+        "Soil Type":   data.get("soil_type")   or data.get("Soil Type"),
+        "Crop Type":   data.get("crop_type")   or data.get("Crop Type"),
+        "Nitrogen":    data.get("nitrogen")    or data.get("Nitrogen"),
+        "Potassium":   data.get("potassium")   or data.get("Potassium"),
+        "Phosphorous": data.get("phosphorous") or data.get("Phosphorous"),
+    }
+    resp, code = _fertilizer_predict(
+        model_key    = "fertilizer2",
+        preprocessor = fertilizer2_preprocessor,
+        classes      = MODEL06_CLASSES,
+        model_label  = "Test 2 — Fertilizer Recommendation",
+        model_db_id  = 6,
+        raw_inputs   = raw_inputs,
+    )
+    return jsonify(resp), code

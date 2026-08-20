@@ -129,13 +129,26 @@ class TFLiteBackend:
                 raw_output = self.interpreter.get_tensor(self.output_details[0]['index'])
 
             elapsed_ms = (time.perf_counter() - start) * 1000
-            probability = float(np.squeeze(raw_output))
-            prediction = 1 if probability >= 0.5 else 0
+            output_squeezed = np.squeeze(raw_output)
+
+            if output_squeezed.ndim == 0:
+                # ── Binary classification (single scalar output) ──────────
+                probability = float(output_squeezed)
+                prediction  = 1 if probability >= 0.5 else 0
+                probabilities = None
+            else:
+                # ── Multi-class (vector output — argmax) ──────────────────
+                prediction    = int(np.argmax(output_squeezed))
+                probability   = float(output_squeezed[prediction])
+                # Normalise to [0,1] for reporting
+                total = float(np.sum(np.abs(output_squeezed))) or 1.0
+                probabilities = [round(float(v) / total, 4) for v in output_squeezed]
 
             return {
                 "success": True,
                 "prediction": prediction,
                 "probability": round(probability, 6),
+                "probabilities": probabilities,   # None for binary, list for multi-class
                 "inference_time_ms": round(elapsed_ms, 3),
                 "backend": "tflite",
                 "runtime": _RUNTIME,

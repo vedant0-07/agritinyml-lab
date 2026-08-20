@@ -65,16 +65,35 @@ def _load_models():
         print(f"[AgriTinyML] Irrigation INT8 model: {status.get('status', 'unknown')}")
     else:
         print("[AgriTinyML] WARNING: irrigation_model_int8.tflite not found.")
-        print(f"[AgriTinyML] Expected at: models/irrigation/model_int8.tflite")
-        print(f"[AgriTinyML] Make sure to copy the model files to the registry structure.")
+
+    # MODEL_05 — Test 1 (Fertilizer, 19 classes)
+    f1_path = os.path.join(BASE_DIR, "models", "model05", "model_int8.tflite")
+    if os.path.exists(f1_path):
+        s = inference_manager.load_model("fertilizer1", os.path.relpath(f1_path, BASE_DIR))
+        print(f"[AgriTinyML] Fertilizer1 (Test 1) model: {s.get('status', 'unknown')}")
+    else:
+        print("[AgriTinyML] WARNING: models/model05/model_int8.tflite not found.")
+
+    # MODEL_06 — Test 2 (Fertilizer, 7 classes)
+    f2_path = os.path.join(BASE_DIR, "models", "model06", "model_int8.tflite")
+    if os.path.exists(f2_path):
+        s = inference_manager.load_model("fertilizer2", os.path.relpath(f2_path, BASE_DIR))
+        print(f"[AgriTinyML] Fertilizer2 (Test 2) model: {s.get('status', 'unknown')}")
+    else:
+        print("[AgriTinyML] WARNING: models/model06/model_int8.tflite not found.")
 
 _load_models()
 
-# --- Verify Preprocessor ---
+# --- Verify Preprocessors ---
 from backend.preprocessing.irrigation import irrigation_preprocessor
-print(f"[AgriTinyML] Preprocessor status: {irrigation_preprocessor.status}")
-if irrigation_preprocessor.status == "error":
-    print(f"[AgriTinyML] Preprocessor error: {irrigation_preprocessor.error_message}")
+from backend.preprocessing.fertilizer import fertilizer1_preprocessor, fertilizer2_preprocessor
+print(f"[AgriTinyML] Preprocessor — Irrigation:   {irrigation_preprocessor.status}")
+print(f"[AgriTinyML] Preprocessor — Fertilizer1:  {fertilizer1_preprocessor.status}")
+print(f"[AgriTinyML] Preprocessor — Fertilizer2:  {fertilizer2_preprocessor.status}")
+if fertilizer1_preprocessor.status == "error":
+    print(f"[AgriTinyML]   Fertilizer1 error: {fertilizer1_preprocessor.error_message}")
+if fertilizer2_preprocessor.status == "error":
+    print(f"[AgriTinyML]   Fertilizer2 error: {fertilizer2_preprocessor.error_message}")
 
 # --- Frontend Routes ---
 @app.route("/")
